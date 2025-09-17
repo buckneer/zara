@@ -1,70 +1,136 @@
 @csrf
 
-<div class="mb-4">
-    <label class="block font-medium">Name</label>
-    <input name="name" value="{{ old('name', $category->name ?? '') }}" class="w-full border p-2" required>
-    @error('name') <div class="text-red-600 text-sm mt-1">{{ $message }}</div> @enderror
-</div>
+<div class="card mb-4">
+    <div class="card-body">
+        {{-- Name --}}
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+                value="{{ old('name', $category->name ?? '') }}"
+                class="form-control @error('name') is-invalid @enderror"
+                required
+                aria-describedby="nameHelp">
+            @error('name')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
-<div class="mb-4">
-    <label class="block font-medium">Slug</label>
-    <input name="slug" id="slug" value="{{ old('slug', $category->slug ?? '') }}" class="w-full border p-2" required>
-    <small class="text-gray-600">Unique slug used in URLs</small>
-    @error('slug') <div class="text-red-600 text-sm mt-1">{{ $message }}</div> @enderror
-</div>
+        {{-- Slug --}}
+        <div class="mb-3">
+            <label for="slug" class="form-label">Slug</label>
+            <input
+                id="slug"
+                name="slug"
+                type="text"
+                value="{{ old('slug', $category->slug ?? '') }}"
+                class="form-control @error('slug') is-invalid @enderror"
+                aria-describedby="slugHelp"
+                required>
+            <div id="slugHelp" class="form-text">Unique slug used in URLs</div>
+            @error('slug')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
-<div class="mb-4">
-    <label class="block font-medium">Parent category (optional)</label>
-    <select name="parent_id" class="w-full border p-2">
-        <option value="">— none —</option>
-        @foreach($parents as $p)
-            <option value="{{ $p->id }}"
-                @if(old('parent_id', $category->parent_id ?? '') == $p->id) selected @endif>
-                {{ $p->name }}
-            </option>
-        @endforeach
-    </select>
-    @error('parent_id') <div class="text-red-600 text-sm mt-1">{{ $message }}</div> @enderror
-</div>
+        {{-- Parent category --}}
+        <div class="mb-3">
+            <label for="parent_id" class="form-label">Parent category (optional)</label>
+            <select
+                id="parent_id"
+                name="parent_id"
+                class="form-select @error('parent_id') is-invalid @enderror">
+                <option value="">— none —</option>
+                @foreach($parents as $p)
+                <option value="{{ $p->id }}" @if(old('parent_id', $category->parent_id ?? '') == $p->id) selected @endif>
+                    {{ $p->name }}
+                </option>
+                @endforeach
+            </select>
+            @error('parent_id')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
-<div class="mb-4">
-    <label class="block font-medium">Description</label>
-    <textarea name="description" class="w-full border p-2" rows="4">{{ old('description', $category->description ?? '') }}</textarea>
-    @error('description') <div class="text-red-600 text-sm mt-1">{{ $message }}</div> @enderror
-</div>
+        {{-- Description --}}
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+                id="description"
+                name="description"
+                rows="4"
+                class="form-control @error('description') is-invalid @enderror">{{ old('description', $category->description ?? '') }}</textarea>
+            @error('description')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-    <div>
-        <label class="block font-medium">Position</label>
-        <input type="number" name="position" value="{{ old('position', $category->position ?? 0) }}" class="w-full border p-2">
-        @error('position') <div class="text-red-600 text-sm mt-1">{{ $message }}</div> @enderror
+        {{-- Position + Active (two columns) --}}
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label for="position" class="form-label">Position</label>
+                <input
+                    id="position"
+                    name="position"
+                    type="number"
+                    min="0"
+                    value="{{ old('position', $category->position ?? 0) }}"
+                    class="form-control @error('position') is-invalid @enderror">
+                @error('position')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-md-4 d-flex align-items-center">
+                <div class="form-check mt-2">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="active"
+                        name="active"
+                        value="1"
+                        @if(old('active', $category->active ?? true)) checked @endif
+                    >
+                    <label class="form-check-label" for="active">Active</label>
+                </div>
+            </div>
+        </div>
+
+        {{-- Submit --}}
+        <div class="d-flex">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
     </div>
-
-    <div class="flex items-center">
-        <label class="inline-flex items-center mt-6">
-            <input type="checkbox" name="active" value="1" @if(old('active', $category->active ?? true)) checked @endif>
-            <span class="ml-2">Active</span>
-        </label>
-    </div>
 </div>
-
-<button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-    const titleInput = document.querySelector('input[name="name"]');
-    const slugInput = document.getElementById('slug');
+    document.addEventListener('DOMContentLoaded', function() {
+        const nameInput = document.getElementById('name');
+        const slugInput = document.getElementById('slug');
 
-    if (titleInput && slugInput) {
-        titleInput.addEventListener('blur', function() {
-            if (!slugInput.value.trim()) {
-                slugInput.value = titleInput.value.toLowerCase().trim()
-                    .replace(/[^\w\s-]/g, '')
-                    .replace(/\s+/g, '-');
-            }
-        });
-    }
-});
+        function slugify(value) {
+            return value.toString().toLowerCase().trim()
+                // remove invalid chars
+                .replace(/[^\w\s-]/g, '')
+                // replace whitespace with -
+                .replace(/\s+/g, '-')
+                // collapse multiple -
+                .replace(/-+/g, '-')
+                // trim leading/trailing -
+                .replace(/^-+|-+$/g, '');
+        }
+
+        if (nameInput && slugInput) {
+            nameInput.addEventListener('blur', function() {
+                // only auto-fill slug when slug is empty
+                if (!slugInput.value.trim()) {
+                    slugInput.value = slugify(nameInput.value);
+                }
+            });
+        }
+    });
 </script>
 @endpush

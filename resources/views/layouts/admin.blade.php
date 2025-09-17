@@ -63,7 +63,6 @@
 	<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
 		<div class="container-fluid">
 			<button class="btn btn-outline-secondary d-lg-none me-2" id="admin-sidebar-toggle" aria-label="Toggle sidebar">☰</button>
-			<a class="navbar-brand" href="{{ route('admin.dashboard') }}">{{ config('app.name') }} <small class="text-muted">Admin</small></a>
 
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav ms-auto">

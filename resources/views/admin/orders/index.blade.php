@@ -3,53 +3,81 @@
 @section('title', 'Orders')
 
 @section('content')
-<div class="p-6">
-	<h1 class="text-2xl font-bold mb-6">Orders</h1>
+<div class="container py-4">
+    <h1 class="h4 mb-4">Orders</h1>
 
-	@if(session('success'))
-	<div class="mb-4 text-green-600">{{ session('success') }}</div>
-	@endif
+    @if(session('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
 
-	<div class="bg-white shadow rounded-lg overflow-hidden">
-		<table class="min-w-full divide-y divide-gray-200 text-sm">
-			<thead class="bg-gray-50">
-				<tr>
-					<th class="px-4 py-2 text-left font-semibold">#</th>
-					<th class="px-4 py-2 text-left font-semibold">Customer</th>
-					<th class="px-4 py-2 text-left font-semibold">Status</th>
-					<th class="px-4 py-2 text-left font-semibold">Placed At</th>
-					<th class="px-4 py-2 text-left font-semibold">Total</th>
-					<th class="px-4 py-2 text-right font-semibold">Actions</th>
-				</tr>
-			</thead>
-			<tbody class="divide-y divide-gray-100">
-				@forelse($orders as $order)
-				<tr>
-					<td class="px-4 py-2">{{ $order->id }}</td>
-					<td class="px-4 py-2">{{ $order->user->name ?? 'Guest' }}</td>
-					<td class="px-4 py-2 capitalize">{{ $order->status }}</td>
-					<td class="px-4 py-2">{{ $order->placed_at?->format('Y-m-d H:i') }}</td>
-					<td class="px-4 py-2 font-semibold">{{ number_format($order->total ?? 0, 2) }} €</td>
-					<td class="px-4 py-2 text-right space-x-2">
-						<a href="{{ route('admin.orders.show', $order) }}" class="text-blue-600 hover:underline">View</a>
-						<form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="inline" onsubmit="return confirm('Delete this order?');">
-							@csrf
-							@method('DELETE')
-							<button type="submit" class="text-red-600 hover:underline">Delete</button>
-						</form>
-					</td>
-				</tr>
-				@empty
-				<tr>
-					<td colspan="6" class="px-4 py-6 text-center text-gray-500">No orders found.</td>
-				</tr>
-				@endforelse
-			</tbody>
-		</table>
-	</div>
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Placed at</th>
+                        <th scope="col">Total</th>
+                        <th scope="col" class="text-end">Actions</th>
+                    </tr>
+                </thead>
 
-	<div class="mt-4">
-		{{ $orders->links() }}
-	</div>
+                <tbody>
+                    @forelse($orders as $order)
+                        <tr>
+                            <td>{{ $order->id }}</td>
+                            <td>{{ $order->user->name ?? 'Guest' }}</td>
+                            <td>
+                                @if($order->status === 'pending')
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                @elseif($order->status === 'processing')
+                                    <span class="badge bg-info text-dark">Processing</span>
+                                @elseif($order->status === 'shipped')
+                                    <span class="badge bg-primary">Shipped</span>
+                                @elseif($order->status === 'completed')
+                                    <span class="badge bg-success">Completed</span>
+                                @elseif($order->status === 'cancelled')
+                                    <span class="badge bg-secondary">Cancelled</span>
+                                @elseif($order->status === 'refunded')
+                                    <span class="badge bg-dark">Refunded</span>
+                                @else
+                                    <span class="badge bg-light text-dark">{{ ucfirst($order->status) }}</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="small text-muted">
+                                    {{ $order->placed_at?->format('Y-m-d H:i') }}
+                                </div>
+                            </td>
+                            <td class="fw-semibold">{{ number_format($order->total ?? 0, 2) }} €</td>
+                            <td class="text-end">
+                                <div class="d-inline-flex">
+                                    <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-outline-primary me-2">View</a>
+
+                                    <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this order?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">No orders found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-3 d-flex justify-content-center">
+        {{ $orders->links() }}
+    </div>
 </div>
 @endsection

@@ -3,53 +3,69 @@
 @section('title', 'Payments')
 
 @section('content')
-<div class="p-6">
-    <h1 class="text-2xl font-bold mb-6">Payments</h1>
+<div class="container py-4">
+    <h1 class="h4 mb-4">Payments</h1>
 
     @if(session('success'))
-        <div class="mb-4 text-green-600">{{ session('success') }}</div>
+        <div class="alert alert-success" role="alert">
+            {{ session('success') }}
+        </div>
     @endif
 
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-4 py-2 text-left font-semibold">#</th>
-                    <th class="px-4 py-2 text-left font-semibold">Order</th>
-                    <th class="px-4 py-2 text-left font-semibold">Method</th>
-                    <th class="px-4 py-2 text-left font-semibold">Status</th>
-                    <th class="px-4 py-2 text-left font-semibold">Amount</th>
-                    <th class="px-4 py-2 text-left font-semibold">Paid At</th>
-                    <th class="px-4 py-2 text-right font-semibold">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                @forelse($payments as $payment)
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead class="table-light">
                     <tr>
-                        <td class="px-4 py-2">{{ $payment->id }}</td>
-                        <td class="px-4 py-2">
-                            <a href="{{ route('admin.orders.show', $payment->order_id) }}" class="text-blue-600 hover:underline">
-                                #{{ $payment->order_id }}
-                            </a>
-                        </td>
-                        <td class="px-4 py-2">{{ $payment->method ?? '-' }}</td>
-                        <td class="px-4 py-2 capitalize">{{ $payment->status }}</td>
-                        <td class="px-4 py-2 font-semibold">{{ number_format($payment->amount ?? 0, 2) }} €</td>
-                        <td class="px-4 py-2">{{ $payment->paid_at?->format('Y-m-d H:i') ?? '-' }}</td>
-                        <td class="px-4 py-2 text-right">
-                            <a href="{{ route('admin.payments.show', $payment) }}" class="text-blue-600 hover:underline">View</a>
-                        </td>
+                        <th scope="col">#</th>
+                        <th scope="col">Order</th>
+                        <th scope="col">Method</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Paid At</th>
+                        <th scope="col" class="text-end">Actions</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" class="px-4 py-6 text-center text-gray-500">No payments found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse($payments as $payment)
+                        <tr>
+                            <td>{{ $payment->id }}</td>
+                            <td>
+                                <a href="{{ route('admin.orders.show', $payment->order_id) }}" class="text-decoration-none">
+                                    #{{ $payment->order_id }}
+                                </a>
+                            </td>
+                            <td>{{ $payment->method ?? '-' }}</td>
+                            <td>
+                                @if($payment->status === 'pending')
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                @elseif($payment->status === 'completed')
+                                    <span class="badge bg-success">Completed</span>
+                                @elseif($payment->status === 'failed')
+                                    <span class="badge bg-danger">Failed</span>
+                                @elseif($payment->status === 'refunded')
+                                    <span class="badge bg-secondary">Refunded</span>
+                                @else
+                                    <span class="badge bg-light text-dark">{{ ucfirst($payment->status) }}</span>
+                                @endif
+                            </td>
+                            <td class="fw-semibold">{{ number_format($payment->amount ?? 0, 2) }} €</td>
+                            <td class="text-muted">{{ $payment->paid_at?->format('Y-m-d H:i') ?? '-' }}</td>
+                            <td class="text-end">
+                                <a href="{{ route('admin.payments.show', $payment) }}" class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">No payments found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-3 d-flex justify-content-center">
         {{ $payments->links() }}
     </div>
 </div>

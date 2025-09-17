@@ -3,69 +3,90 @@
 @section('title', 'Order #'.$order->id)
 
 @section('content')
-<div class="p-6">
-	<h1 class="text-2xl font-bold mb-6">Order #{{ $order->id }}</h1>
+<div class="container py-4">
+    <h1 class="h4 mb-4">Order #{{ $order->id }}</h1>
 
-	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-		{{-- Order details --}}
-		<div class="lg:col-span-2 bg-white shadow rounded-lg p-6">
-			<h2 class="text-lg font-semibold mb-4">Items</h2>
-			<table class="w-full text-sm">
-				<thead class="border-b">
-					<tr>
-						<th class="text-left pb-2">Product</th>
-						<th class="text-left pb-2">Variant</th>
-						<th class="text-left pb-2">Qty</th>
-						<th class="text-left pb-2">Unit</th>
-						<th class="text-left pb-2">Line total</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach($order->items as $item)
-					<tr class="border-b">
-						<td class="py-2">{{ $item->product->title ?? '—' }}</td>
-						<td class="py-2">{{ $item->variant->name ?? '-' }}</td>
-						<td class="py-2">{{ $item->qty }}</td>
-						<td class="py-2">{{ number_format($item->unit_price, 2) }} €</td>
-						<td class="py-2 font-semibold">{{ number_format($item->unit_price * $item->qty, 2) }} €</td>
-					</tr>
-					@endforeach
-				</tbody>
-			</table>
-		</div>
+    <div class="row g-4">
+        {{-- Order details (main) --}}
+        <div class="col-12 col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="h6 mb-3">Items</h2>
 
-		{{-- Sidebar --}}
-		<aside class="bg-white shadow rounded-lg p-6 space-y-4">
-			<div>
-				<h2 class="font-semibold">Customer</h2>
-				<p>{{ $order->user->name ?? 'Guest' }}</p>
-				<p class="text-sm text-gray-500">{{ $order->user->email ?? '' }}</p>
-			</div>
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Variant</th>
+                                    <th>Qty</th>
+                                    <th>Unit</th>
+                                    <th class="text-end">Line total</th>
+                                </tr>
+                            </thead>
 
-			<div>
-				<h2 class="font-semibold">Status</h2>
-				<form action="{{ route('admin.orders.update', $order) }}" method="POST" class="space-y-2">
-					@csrf
-					@method('PUT')
-					<select name="status" class="w-full border rounded p-2">
-						@foreach(['pending','processing','shipped','completed','cancelled','refunded'] as $status)
-						<option value="{{ $status }}" @selected($order->status === $status)>{{ ucfirst($status) }}</option>
-						@endforeach
-					</select>
-					<button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded">Update</button>
-				</form>
-			</div>
+                            <tbody>
+                                @foreach($order->items as $item)
+                                    <tr>
+                                        <td>{{ $item->product->title ?? '—' }}</td>
+                                        <td>{{ $item->variant->name ?? '-' }}</td>
+                                        <td>{{ $item->qty }}</td>
+                                        <td>{{ number_format($item->unit_price, 2) }} €</td>
+                                        <td class="text-end fw-semibold">{{ number_format($item->unit_price * $item->qty, 2) }} €</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-			<div>
-				<h2 class="font-semibold">Placed at</h2>
-				<p>{{ $order->placed_at?->format('Y-m-d H:i') }}</p>
-			</div>
+        {{-- Sidebar --}}
+        <aside class="col-12 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="h6">Customer</h5>
+                    <p class="mb-0">{{ $order->user->name ?? 'Guest' }}</p>
+                    <p class="small text-muted mb-0">{{ $order->user->email ?? '' }}</p>
+                </div>
+            </div>
 
-			<div>
-				<h2 class="font-semibold">Total</h2>
-				<p class="text-lg font-bold">{{ number_format($order->total ?? 0, 2) }} €</p>
-			</div>
-		</aside>
-	</div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="h6">Status</h5>
+
+                    <form action="{{ route('admin.orders.update', $order) }}" method="POST" class="mt-2">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="mb-2">
+                            <select name="status" class="form-select">
+                                @foreach(['pending','processing','shipped','completed','cancelled','refunded'] as $status)
+                                    <option value="{{ $status }}" @selected($order->status === $status)>{{ ucfirst($status) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Update</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="h6">Placed at</h5>
+                    <p class="mb-0">{{ $order->placed_at?->format('Y-m-d H:i') }}</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="h6">Total</h5>
+                    <p class="fs-5 fw-bold mb-0">{{ number_format($order->total ?? 0, 2) }} €</p>
+                </div>
+            </div>
+        </aside>
+    </div>
 </div>
 @endsection

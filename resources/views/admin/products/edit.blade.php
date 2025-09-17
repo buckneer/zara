@@ -1,51 +1,78 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container py-8">
-    <h1>Edit product</h1>
+<div class="container py-4">
+    <h1 class="h4 mb-4">Edit product</h1>
 
-    <form action="{{ route('admin.products.update', $product) }}" method="POST">
-        @method('PUT')
-        @include('admin.products._form')
-    </form>
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="{{ route('admin.products.update', $product) }}" method="POST">
+                @method('PUT')
+                @include('admin.products._form')
+            </form>
+        </div>
+    </div>
 
-    {{-- Image upload form (posts to ProductImageController) --}}
-    <div class="mt-8">
-        <h2>Images</h2>
+    {{-- Images --}}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">Images</h5>
 
-        <form action="{{ route('admin.products.images.store', $product) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div>
-                <label>Image file</label>
-                <input type="file" name="image" accept="image/*" required>
-            </div>
-            <div>
-                <label>Alt text</label>
-                <input type="text" name="alt">
-            </div>
-            <div>
-                <label>Is primary</label>
-                <input type="checkbox" name="is_primary" value="1">
-            </div>
-            <button class="mt-2 px-3 py-2 bg-green-600 text-white rounded" type="submit">Upload</button>
-        </form>
+            <form action="{{ route('admin.products.images.store', $product) }}" method="POST" enctype="multipart/form-data" class="row g-2 align-items-end">
+                @csrf
 
-        {{-- existing images --}}
-        <div class="mt-4 flex gap-4">
-            @foreach($product->images as $img)
-                <div class="text-center">
-                    <img src="{{ \Illuminate\Support\Facades\Storage::url($img->path) }}" style="width:120px;height:120px;object-fit:cover;">
-                    <div class="mt-1">
-                        <form action="{{ route('admin.products.images.destroy', [$product, $img]) }}" method="POST" onsubmit="return confirm('Delete image?');">
-                            @csrf @method('DELETE')
-                            <button class="px-2 py-1 bg-red-600 text-white rounded">Delete</button>
-                        </form>
-                    </div>
-                    <div>
-                        @if($img->is_primary) <small>Primary</small> @endif
+                <div class="col-md-5">
+                    <label for="image" class="form-label">Image file</label>
+                    <input id="image" type="file" name="image" accept="image/*" required class="form-control">
+                </div>
+
+                <div class="col-md-5">
+                    <label for="alt" class="form-label">Alt text</label>
+                    <input id="alt" type="text" name="alt" class="form-control">
+                </div>
+
+                <div class="col-md-2 d-flex align-items-center">
+                    <div class="form-check mb-0 me-2">
+                        <input id="is_primary" class="form-check-input" type="checkbox" name="is_primary" value="1">
+                        <label class="form-check-label small" for="is_primary">Is primary</label>
                     </div>
                 </div>
-            @endforeach
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success">Upload</button>
+                </div>
+            </form>
+
+            {{-- existing images --}}
+            <div class="mt-4">
+                @if($product->images->count())
+                <div class="row gy-3">
+                    @foreach($product->images as $img)
+                    <div class="col-6 col-sm-4 col-md-3 text-center">
+                        <div class="ratio ratio-1x1 mb-2">
+                            <img src="{{ \Illuminate\Support\Facades\Storage::url($img->path) }}" alt="{{ $img->alt ?? '' }}" class="img-fluid rounded">
+                        </div>
+
+                        <div class="d-flex justify-content-center gap-2">
+                            <form action="{{ route('admin.products.images.destroy', [$product, $img]) }}" method="POST" onsubmit="return confirm('Delete image?');" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </div>
+
+                        <div class="mt-2">
+                            @if($img->is_primary)
+                            <span class="badge bg-primary">Primary</span>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <p class="text-muted mb-0">No images uploaded yet.</p>
+                @endif
+            </div>
         </div>
     </div>
 </div>
