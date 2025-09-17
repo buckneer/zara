@@ -36,7 +36,7 @@ class CategoryController extends Controller
 
         return $request->wantsJson()
             ? response()->json($category, 201)
-            : redirect()->route('categories.index')->with('success', 'Category created.');
+            : redirect()->route('admin.categories.index')->with('success', 'Category created.');
     }
 
     public function show(Category $category)
@@ -65,7 +65,7 @@ class CategoryController extends Controller
 
         return $request->wantsJson()
             ? response()->json($category)
-            : redirect()->route('categories.index')->with('success', 'Category updated.');
+            : redirect()->route('admin.categories.index')->with('success', 'Category updated.');
     }
 
     public function destroy(Request $request, Category $category)
@@ -73,6 +73,6 @@ class CategoryController extends Controller
         $category->delete();
         return $request->wantsJson()
             ? response()->json(['message'=>'deleted'])
-            : redirect()->route('categories.index')->with('success', 'Category deleted.');
+            : redirect()->route('admin.categories.index')->with('success', 'Category deleted.');
     }
 }

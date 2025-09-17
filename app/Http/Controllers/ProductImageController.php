@@ -20,7 +20,8 @@ class ProductImageController extends Controller
             'is_primary' => 'nullable|boolean',
         ]);
 
-        $path = $request->file('image')->store('public/products');
+        // store on public disk WITHOUT literal "public/" prefix in DB
+        $path = $request->file('image')->store('products', 'public'); // => "products/xxx.jpg"
 
         $image = ProductImage::create([
             'product_id' => $product->id,
@@ -36,9 +37,10 @@ class ProductImageController extends Controller
 
     public function destroy(Request $request, Product $product, ProductImage $image)
     {
-        if (Storage::exists($image->path)) {
-            Storage::delete($image->path);
-        }
+        // delete from the public disk
+        Storage::disk('public')->delete($image->path);
+
+        // remove DB record
         $image->delete();
 
         return $request->wantsJson() ? response()->json(['message'=>'deleted']) : redirect()->back()->with('success','Image removed.');

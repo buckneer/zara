@@ -76,4 +76,9 @@ class User extends Authenticatable
     {
         return $this->hasRole('admin');
     }
+
+    public function cart()
+    {
+        return $this->hasOne(\App\Models\Cart::class);
+    }
 }

@@ -64,7 +64,7 @@
                 @endphp
 
                 <li class="nav-item me-2 position-relative">
-                    <a class="nav-link icon-btn" href="#" aria-label="Cart">
+                    <a class="nav-link icon-btn" href="{{ route("cart.index") }}" aria-label="Cart">
                         <i class="bi bi-cart"></i>
                         @if($cartCount > 0)
                         <span class="cart-badge">{{ $cartCount }}</span>
@@ -86,11 +86,11 @@
                 @auth
                 @if(method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
                 <li class="nav-item me-2 d-none d-lg-block">
-                    <a class="nav-link" href="#">Admin</a>
+                    <a class="nav-link" href="{{ route("admin.products.index") }}">Admin</a>
                 </li>
                 @else
                 <li class="nav-item me-2 d-none d-lg-block">
-                    <a class="nav-link" href="#">Orders</a>
+                    <a class="nav-link"href="{{ route("orders.index") }}">Orders</a>
                 </li>
                 @endif
 
@@ -105,8 +105,8 @@
                         <span class="d-none d-lg-inline">{{ auth()->user()->full_name ?? auth()->user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUser">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Orders</a></li>
+                        <li><a class="dropdown-item" href="{{ route("account.profile") }}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route("orders.index") }}">Orders</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
