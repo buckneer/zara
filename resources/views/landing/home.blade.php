@@ -49,40 +49,47 @@
     </section>
 
     {{-- Grid gallery --}}
+    {{-- replace the "Grid gallery" section in your landing page with this --}}
     <section class="product-grid py-5 bg-white">
         <div class="container">
+            {{-- Featured row (optional) --}}
+            @if(!empty($featuredProducts) && $featuredProducts->count())
             <div class="d-flex justify-content-between align-items-end mb-4">
-                <h3 class="mb-0">New arrivals</h3>
-                <a href="#" class="muted-small">View all</a>
+                <h3 class="mb-0">Featured</h3>
+                <a href="{{ route('products.index') }}" class="muted-small">View all</a>
             </div>
 
-            <div class="row g-4">
-                @for ($i = 1; $i <= 6; $i++)
-                    <div class="col-6 col-md-4">
-                    <article class="product-card" aria-labelledby="product-{{ $i }}-title">
-                        <span class="tag">New</span>
-                        <img src="https://picsum.photos/600/800?random={{ 20 + $i }}" class="card-img-top product-img" alt="Product {{ $i }}">
-
-                        <div class="product-overlay">
-                            <a href="#" class="btn">Quick view</a>
-                            <a href="#" class="btn">Add to cart</a>
-                        </div>
-
-                        <div class="card-body px-0 pt-2 pb-0">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="small text-uppercase muted-small">Essential</div>
-                                    <h3 id="product-{{ $i }}-title" class="fw-medium" style="font-size:1rem; margin:2px 0;">Piece {{ $i }}</h3>
-                                </div>
-                                <div class="price">€89</div>
-                            </div>
-                        </div>
-                    </article>
+            <div class="row g-4 mb-5">
+                @foreach($featuredProducts as $product)
+                <div class="col-6 col-md-4">
+                    @include('partials.product-tile', ['product' => $product])
+                </div>
+                @endforeach
             </div>
-            @endfor
-        </div>
+            @endif
+
+            {{-- Loop categories (keeps your style intact) --}}
+            @foreach($categories as $category)
+            <div class="d-flex justify-content-between align-items-end mb-4 mt-4">
+                <h3 class="mb-0">{{ $category->name }}</h3>
+                <a href="{{ route('products.index', ['category' => $category->id]) }}" class="muted-small">View all</a>
+            </div>
+
+            <div class="row g-4 mb-5">
+                @forelse($category->products as $product)
+                <div class="col-6 col-md-4">
+                    @include('partials.product-tile', ['product' => $product])
+                </div>
+                @empty
+                <div class="col-12">
+                    <p class="text-muted">No products in this category yet.</p>
+                </div>
+                @endforelse
+            </div>
+            @endforeach
         </div>
     </section>
+
 
     {{-- Newsletter / CTA --}}
     <section class="py-6">

@@ -16,10 +16,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('landing.home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
 
