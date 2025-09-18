@@ -1,6 +1,5 @@
-{{-- resources/views/admin/products/form.blade.php --}}
+
 @php
-    // $product may be null (create) or a Product instance (edit)
     $isEdit = isset($product);
 @endphp
 
@@ -21,7 +20,7 @@
             </div>
 
             <div class="card p-4" style="background:#fff; border:1px solid #e9e9e9;">
-                {{-- Title --}}
+                
                 <div class="mb-3">
                     <label for="title" class="form-label text-uppercase small fw-bold">Title</label>
                     <input id="title" name="title" type="text"
@@ -33,7 +32,7 @@
                     @enderror
                 </div>
 
-                {{-- Slug --}}
+                
                 <div class="mb-3">
                     <label for="slug" class="form-label text-uppercase small fw-bold">Slug</label>
                     <input id="slug" name="slug" type="text" value="{{ old('slug', $product->slug ?? '') }}"
@@ -46,7 +45,7 @@
                 </div>
 
                 <div class="row g-3">
-                    {{-- SKU --}}
+                    
                     <div class="col-md-6">
                         <label for="sku" class="form-label text-uppercase small fw-bold">SKU</label>
                         <input id="sku" name="sku" type="text"
@@ -58,7 +57,7 @@
                         @enderror
                     </div>
 
-                    {{-- Price --}}
+                    
                     <div class="col-md-6">
                         <label for="price" class="form-label text-uppercase small fw-bold">Price</label>
                         <input id="price" name="price" type="number" step="0.01"
@@ -71,7 +70,7 @@
                     </div>
                 </div>
 
-                {{-- Brand --}}
+                
                 <div class="mb-3 mt-3">
                     <label for="brand" class="form-label text-uppercase small fw-bold">Brand</label>
                     <input id="brand" name="brand" type="text"
@@ -83,7 +82,7 @@
                     @enderror
                 </div>
 
-                {{-- Description --}}
+                
                 <div class="mb-3">
                     <label for="description" class="form-label text-uppercase small fw-bold">Description</label>
                     <textarea id="description" name="description" rows="6"
@@ -96,7 +95,7 @@
 
                 <hr class="my-4">
 
-                {{-- Categories --}}
+                
                 @php
                     $selectedCategories = old(
                         'category_ids',
@@ -120,14 +119,14 @@
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between mt-3">
-                    {{-- Active --}}
+                    
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="active" name="active" value="1"
                             @if (old('active', $product->active ?? false)) checked @endif>
                         <label class="form-check-label text-uppercase small fw-bold" for="active">Active</label>
                     </div>
 
-                    {{-- Submit --}}
+                    
                     <div>
                         <button type="submit" class="btn btn-dark text-uppercase fw-bold px-4 py-2">
                             Save
@@ -136,11 +135,11 @@
                 </div>
             </div>
 
-            {{-- Images area (separate block) --}}
+            
             <div class="card mt-4 p-4" style="background:#fff; border:1px solid #e9e9e9;">
                 <h6 class="small text-uppercase fw-bold mb-3">Images</h6>
 
-                {{-- Existing images (edit only) --}}
+                
                 @if ($isEdit && $product->images->count())
                     <div class="mb-3">
                         <label class="form-label small text-uppercase fw-bold d-block mb-2">Existing Images</label>
@@ -173,7 +172,7 @@
                     </div>
                 @endif
 
-                {{-- Images upload --}}
+                
                 <div class="mb-3">
                     <label for="images" class="form-label text-uppercase small fw-bold">Upload New Images</label>
                     <input id="images" name="images[]" type="file" multiple accept="image/*"
@@ -187,7 +186,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
 
-                    {{-- previews for selected (new) images --}}
+                    
                     <div id="new-previews" class="d-flex flex-wrap gap-2 mt-3"></div>
                 </div>
 

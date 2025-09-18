@@ -5,7 +5,7 @@
 @section('content')
     <main class="landing">
 
-        {{-- HERO --}}
+        
         <section class="hero d-flex align-items-center text-center mb-4">
             <div class="hero-overlay" aria-hidden="true"></div>
 
@@ -25,7 +25,7 @@
             </div>
         </section>
 
-        {{-- Featured products / editorial --}}
+        
         <section class="py-6">
             <div class="container">
                 <div class="row g-4 align-items-center featured">
@@ -49,11 +49,11 @@
             </div>
         </section>
 
-        {{-- Grid gallery --}}
-        {{-- replace the "Grid gallery" section in your landing page with this --}}
+        
+        
         <section class="product-grid py-5 bg-white">
             <div class="container">
-                {{-- Featured row (optional) --}}
+                
                 @if (!empty($featuredProducts) && $featuredProducts->count())
                     <div class="d-flex justify-content-between align-items-end mb-4">
                         <h3 class="mb-0">Featured</h3>
@@ -69,7 +69,7 @@
                     </div>
                 @endif
 
-                {{-- Loop categories (keeps your style intact) --}}
+                
                 @foreach ($categories as $category)
                     <div class="d-flex justify-content-between align-items-end mb-4 mt-4">
                         <h3 class="mb-0">{{ $category->name }}</h3>
@@ -93,7 +93,7 @@
         </section>
 
 
-        {{-- Newsletter / CTA --}}
+        
         <section class="py-6">
             <div class="container">
                 <div class="row justify-content-center">

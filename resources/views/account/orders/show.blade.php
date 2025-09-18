@@ -1,4 +1,4 @@
-{{-- resources/views/account/orders/show.blade.php --}}
+
 @extends('layouts.guest')
 
 @section('content')
@@ -16,13 +16,13 @@
                 </span>
                 <div class="mt-2">
                     <button class="btn btn-outline-secondary btn-sm me-2" onclick="window.print()">Print</button>
-                    {{-- If you have a route to download invoice, replace '#' with route('orders.invoice', $order) --}}
+                    
                     <a href="#" class="btn btn-outline-primary btn-sm">Download invoice</a>
                 </div>
             </div>
         </div>
 
-        {{-- Top summary cards --}}
+        
         <div class="row mb-4 g-3">
             <div class="col-md-4">
                 <div class="card h-100">
@@ -87,7 +87,7 @@
                         <div class="small text-muted mb-2">{{ $order->shipping_method ?? '—' }}</div>
                         @if ($order->shipping_tracking)
                             <div class="mb-1"><strong>Tracking:</strong> {{ $order->shipping_tracking }}</div>
-                            {{-- Optionally link to carrier tracking if you store carrier URL in meta --}}
+                            
                             @if (is_array($order->meta) && !empty($order->meta['tracking_url']))
                                 <a href="{{ $order->meta['tracking_url'] }}" target="_blank" class="small">Track
                                     shipment</a>
@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        {{-- Addresses --}}
+        
         <div class="row mb-4 g-3">
             <div class="col-md-6">
                 <div class="card">
@@ -153,7 +153,7 @@
             </div>
         </div>
 
-        {{-- Items --}}
+        
         <div class="card mb-4">
             <div class="card-header">Items</div>
             <div class="card-body p-0">
@@ -172,7 +172,7 @@
                                 <tr>
                                     <td>
                                         <div class="d-flex">
-                                            {{-- Try display product image if available --}}
+                                            
                                             @php
                                                 $img = optional($item->product)->images
                                                     ? optional(
@@ -220,7 +220,7 @@
             </div>
         </div>
 
-        {{-- Order notes / meta --}}
+        
         @if (is_array($order->meta) && !empty(array_filter($order->meta)))
             <div class="card mb-4">
                 <div class="card-header">Order notes</div>
@@ -230,11 +230,11 @@
             </div>
         @endif
 
-        {{-- Footer actions --}}
+        
         <div class="d-flex gap-2">
             <a href="{{ route('account.profile') }}" class="btn btn-outline-secondary">Back to account</a>
             <a href="{{ route('products.index') }}" class="btn btn-outline-primary">Continue shopping</a>
-            {{-- Example reorder action (implement route if desired) --}}
+            
             <form action="{{ route('orders.reorder', $order->id) ?? '#' }}" method="POST" class="d-inline">
                 @csrf
                 <button class="btn btn-success">Reorder</button>

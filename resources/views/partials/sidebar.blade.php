@@ -1,11 +1,10 @@
-{{-- resources/views/partials/sidebar.blade.php (black & white version) --}}
 @php
     $route = request()->route() ? request()->route()->getName() : '';
     $isActive = fn($names) => collect((array) $names)->contains(fn($n) => str($route)->startsWith($n));
 @endphp
 
 <div class="d-flex flex-column p-3 bg-white border rounded min-vh-100">
-    {{-- Brand --}}
+    
     <div class="d-flex align-items-center mb-3">
         <div class="bg-black text-white rounded-circle d-flex align-items-center justify-content-center me-2"
             style="width:40px; height:40px;">
@@ -18,7 +17,7 @@
         </div>
     </div>
 
-    {{-- Navigation --}}
+    
     <nav class="mb-3">
         <div class="small text-uppercase text-muted mb-2">Manage</div>
 
@@ -66,7 +65,7 @@
         </ul>
     </nav>
 
-    {{-- Quick actions --}}
+    
     <div class="mb-3">
         <div class="small text-uppercase text-muted mb-2">Quick actions</div>
 
@@ -78,7 +77,7 @@
 
     <hr class="my-3">
 
-    {{-- User info --}}
+    
     <div class="mt-auto">
         <div class="small text-muted">Signed in as</div>
         <div class="fw-semibold text-black">{{ Auth::user()->name ?? Auth::user()->email }}</div>

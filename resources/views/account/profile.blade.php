@@ -1,4 +1,4 @@
-{{-- resources/views/account/profile.blade.php --}}
+
 @extends('layouts.guest')
 
 @section('content')

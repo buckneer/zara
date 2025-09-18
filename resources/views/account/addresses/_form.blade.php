@@ -1,5 +1,5 @@
-{{-- resources/views/account/addresses/_form.blade.php --}}
-{{-- Partial used by create & edit. Expects $address (may be null) --}}
+
+
 @php
     // $address may be null (create) or an Address instance (edit)
     $isEdit = isset($address);

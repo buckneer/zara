@@ -1,4 +1,4 @@
-{{-- resources/views/account/orders.show.blade.php --}}
+
 @extends('layouts.guest')
 
 @section('content')

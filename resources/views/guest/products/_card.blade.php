@@ -1,4 +1,4 @@
-{{-- resources/views/products/_card.blade.php --}}
+
 @php
     $img = $product->images->where('is_primary', true)->first() ?? $product->images->first();
     $imgUrl = $img ? '/storage/' . $img->path : null;
@@ -7,7 +7,7 @@
 <div class="product-card border-0 bg-transparent">
     <a href="{{ route('products.show', $product) }}" class="d-block text-decoration-none text-dark">
         @if ($imgUrl)
-            {{-- inline style for crop — keeps image elegant and consistent --}}
+            
             <img src="{{ $imgUrl }}" alt="{{ $img->alt ?? $product->title }}" class="img-fluid w-100"
                 style="height:320px; object-fit:cover; display:block;">
         @else
@@ -29,14 +29,14 @@
                     data-base-price="{{ $product->price }}">{{ number_format($product->price, 2) }} €</span>
             </div>
 
-            {{-- optional quick actions (small) --}}
+            
             <div class="text-end">
                 <a href="{{ route('products.show', $product) }}"
                     class="small text-decoration-none text-muted">Details</a>
             </div>
         </div>
 
-        {{-- Add to cart form --}}
+        
         <form action="{{ route('cart.add') }}" method="POST" class="row gx-2 gy-2 align-items-center">
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">

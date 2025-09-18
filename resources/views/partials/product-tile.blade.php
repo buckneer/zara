@@ -1,4 +1,4 @@
-{{-- resources/views/partials/product-tile.blade.php --}}
+
 @php
     // $product must be passed in
     $img = $product->images->where('is_primary', true)->first() ?? $product->images->first();
@@ -8,7 +8,7 @@
 @endphp
 
 <article class="product-card" aria-labelledby="product-{{ $product->id }}-title">
-    {{-- optional tag if product has new/featured flag --}}
+    
     @if (!empty($product->is_new) || !empty($product->featured))
         <span class="tag">
             @if (!empty($product->featured))

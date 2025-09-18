@@ -1,4 +1,4 @@
-{{-- resources/views/admin/users/show.blade.php --}}
+
 @extends('layouts.admin')
 
 @section('title', 'User #' . $user->id)
@@ -49,7 +49,7 @@
                     </div>
                 </div>
 
-                {{-- Orders list --}}
+                
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>

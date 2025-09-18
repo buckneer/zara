@@ -3,7 +3,6 @@
 @section('content')
     <div class="container py-4">
         <div class="row g-4">
-            {{-- LEFT: filters + cart --}}
             <aside class="col-md-3">
                 <div class="card mb-4 border-0">
                     <div class="card-body">
@@ -43,14 +42,14 @@
                     </div>
                 </div>
 
-                {{-- Cart Mini --}}
+               
                 @include('shop._cart_sidebar', [
                     'cartItems' => $cartItems ?? [],
                     'subtotal' => $subtotal ?? 0,
                 ])
             </aside>
 
-            {{-- RIGHT: products --}}
+            
             <main class="col-md-9">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <h1 class="h4 text-uppercase mb-0">

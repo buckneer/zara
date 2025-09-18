@@ -16,7 +16,7 @@
 
             <div class="card p-4" style="background:#fff; border:1px solid #e9e9e9;">
 
-                {{-- Name --}}
+                
                 <div class="mb-3">
                     <label for="name" class="form-label text-uppercase small fw-bold">Name</label>
                     <input id="name" name="name" type="text" value="{{ old('name', $category->name ?? '') }}"
@@ -26,7 +26,7 @@
                     @enderror
                 </div>
 
-                {{-- Slug --}}
+                
                 <div class="mb-3">
                     <label for="slug" class="form-label text-uppercase small fw-bold">Slug</label>
                     <input id="slug" name="slug" type="text" value="{{ old('slug', $category->slug ?? '') }}"
@@ -37,7 +37,7 @@
                     @enderror
                 </div>
 
-                {{-- Parent category --}}
+                
                 <div class="mb-3">
                     <label for="parent_id" class="form-label text-uppercase small fw-bold">Parent category
                         (optional)</label>
@@ -55,7 +55,7 @@
                     @enderror
                 </div>
 
-                {{-- Description --}}
+                
                 <div class="mb-3">
                     <label for="description" class="form-label text-uppercase small fw-bold">Description</label>
                     <textarea id="description" name="description" rows="4"
@@ -65,7 +65,7 @@
                     @enderror
                 </div>
 
-                {{-- Position + Active (two columns) --}}
+                
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
                         <label for="position" class="form-label text-uppercase small fw-bold">Position</label>
@@ -86,7 +86,7 @@
                     </div>
                 </div>
 
-                {{-- Submit --}}
+                
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-dark text-uppercase fw-bold px-4 py-2">Save</button>
                 </div>

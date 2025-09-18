@@ -1,4 +1,4 @@
-{{-- resources/views/guest/cart/index.blade.php --}}
+
 @extends('layouts.guest')
 
 @section('content')
@@ -25,7 +25,7 @@
             </div>
         @else
             <div class="row g-4">
-                {{-- Cart lines --}}
+                
                 <div class="col-lg-8">
                     <div class="card border-0 p-0">
                         <div class="card-body p-0">
@@ -121,7 +121,7 @@
                     </div>
                 </div>
 
-                {{-- Summary / actions --}}
+                
                 <aside class="col-lg-4">
                     <div class="card border-0 p-0">
                         <div class="card-body">

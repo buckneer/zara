@@ -1,4 +1,4 @@
-{{-- resources/views/admin/users/index.blade.php --}}
+
 @extends('layouts.admin')
 
 @section('title', 'Users')
@@ -53,7 +53,7 @@
                                         @csrf
                                         @method('PUT')
 
-                                        {{-- single-select that syncs to roles[] --}}
+                                        
                                         <select name="roles[]" class="form-select form-select-sm me-2"
                                             onchange="document.getElementById('role-form-{{ $user->id }}').submit();">
                                             <option value="">— No role —</option>

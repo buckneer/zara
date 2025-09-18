@@ -27,7 +27,7 @@
             </div>
 
             <div class="mt-4 d-flex justify-content-center">
-                {{-- Use Bootstrap paginator view --}}
+                
                 {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
             </div>
         @endif

@@ -3,7 +3,7 @@
 @section('content')
     <div class="container py-5">
         <div class="row gx-4 gy-4">
-            {{-- Main image & thumbnails --}}
+            
             <div class="col-12 col-lg-8">
                 @php
                     $primary = $product->images->where('is_primary', true)->first() ?? $product->images->first();
@@ -31,7 +31,7 @@
                 @endif
             </div>
 
-            {{-- Product details / buy box --}}
+            
             <aside class="col-12 col-lg-4">
                 <h1 class="h4 text-uppercase mb-2" style="letter-spacing:0.04em;">{{ $product->title }}</h1>
 
@@ -62,7 +62,7 @@
                     </div>
                 @endif
 
-                {{-- Add to cart --}}
+                
                 <div class="mb-4">
                     <form action="{{ route('cart.add') }}" method="POST" id="product-add-to-cart-form">
                         @csrf
@@ -102,7 +102,7 @@
                     </form>
                 </div>
 
-                {{-- Admin actions --}}
+                
                 @auth
                     @if (auth()->user()->isAdmin())
                         <div class="d-flex gap-2">

@@ -7,7 +7,7 @@
         <h1 class="text-2xl font-bold mb-6">Payment #{{ $payment->id }}</h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {{-- Payment details --}}
+            
             <div class="lg:col-span-2 bg-white shadow rounded-lg p-6 space-y-4">
                 <div>
                     <h2 class="font-semibold">Order</h2>
@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            {{-- Sidebar --}}
+            
             <aside class="bg-white shadow rounded-lg p-6 space-y-4">
                 <h2 class="font-semibold">Actions</h2>
                 <form action="{{ route('admin.payments.destroy', $payment) }}" method="POST"

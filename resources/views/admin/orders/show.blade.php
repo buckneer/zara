@@ -7,7 +7,7 @@
         <h1 class="h4 mb-4">Order #{{ $order->id }}</h1>
 
         <div class="row g-4">
-            {{-- Order details (main) --}}
+            
             <div class="col-12 col-lg-8">
                 <div class="card">
                     <div class="card-body">
@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            {{-- Sidebar --}}
+            
             <aside class="col-12 col-lg-4">
                 <div class="card mb-3">
                     <div class="card-body">
