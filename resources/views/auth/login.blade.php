@@ -6,14 +6,14 @@
     <div class="auth-wrapper">
         <div class="container">
             <div class="row gx-5 align-items-center">
-                <!-- Left image: hidden on small screens -->
+                
                 <div class="col-md-6 d-none d-md-block">
                     <div class="auth-left shadow-sm rounded"
                         style="background-image: url('https://picsum.photos/900/1200?grayscale&random=1');">
                     </div>
                 </div>
 
-                <!-- Right: form -->
+                
                 <div class="col-12 col-md-6">
                     <div class="card auth-card p-4">
                         <div class="card-body">
@@ -69,7 +69,7 @@
                                 <a href="{{ route('register') }}" class="text-dark ms-1">Create an account</a>
                             </div>
 
-                            <!-- optional alternate small image for mobile -->
+                            
                             <div class="d-block d-md-none text-center mt-4">
                                 <img src="https://picsum.photos/600/400?random=2" alt="look" class="img-fluid rounded">
                             </div>
@@ -77,6 +77,6 @@
                     </div>
                 </div>
             </div>
-        </div> <!-- /container -->
-    </div> <!-- /auth-wrapper -->
+        </div> 
+    </div> 
 @endsection

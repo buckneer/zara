@@ -1,6 +1,6 @@
 
 @php
-    // $product must be passed in
+    
     $img = $product->images->where('is_primary', true)->first() ?? $product->images->first();
     $imgUrl = $img
         ? '/storage/' . $img->path

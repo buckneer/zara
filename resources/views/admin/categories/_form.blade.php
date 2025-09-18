@@ -1,5 +1,5 @@
 @php
-    // $category may be null (create) or a Category instance (edit)
+    
     $isEdit = isset($category);
 @endphp
 @csrf
@@ -104,19 +104,19 @@
 
             function slugify(value) {
                 return value.toString().toLowerCase().trim()
-                    // remove invalid chars
+                    
                     .replace(/[^\w\s-]/g, '')
-                    // replace whitespace with -
+                    
                     .replace(/\s+/g, '-')
-                    // collapse multiple -
+                    
                     .replace(/-+/g, '-')
-                    // trim leading/trailing -
+                    
                     .replace(/^-+|-+$/g, '');
             }
 
             if (nameInput && slugInput) {
                 nameInput.addEventListener('blur', function() {
-                    // only auto-fill slug when slug is empty
+                    
                     if (!slugInput.value.trim()) {
                         slugInput.value = slugify(nameInput.value);
                     }

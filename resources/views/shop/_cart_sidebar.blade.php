@@ -1,14 +1,14 @@
 @php
     use Illuminate\Support\Str;
 
-    // prefer explicit view vars, then session fallback
+    
     $items = $items ?? ($cartItems ?? (session('cart.items') ?? (session('cart') ?? [])));
-    // normalize: if session('cart') is an object with 'items' key or array of lines
+    
     if (is_array($items) && isset($items['items']) && is_array($items['items'])) {
         $items = $items['items'];
     }
 
-    // compute subtotal if not passed
+    
     $subtotal =
         $subtotal ??
         array_reduce(

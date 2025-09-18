@@ -41,7 +41,7 @@
                                 <td class="zara-td">
                                     @php
                                         $status = $order->status;
-                                        // normalize to safe string
+                                        
                                         $statusLabel = ucfirst($status ?? 'unknown');
                                     @endphp
 

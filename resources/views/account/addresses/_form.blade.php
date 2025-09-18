@@ -1,7 +1,7 @@
 
 
 @php
-    // $address may be null (create) or an Address instance (edit)
+    
     $isEdit = isset($address);
 @endphp
 

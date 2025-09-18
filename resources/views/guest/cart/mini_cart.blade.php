@@ -1,5 +1,5 @@
 @php
-    // Try DB for logged in user; for guest use session
+    
     $count = 0;
     $subtotal = 0.0;
 
@@ -12,7 +12,7 @@
                 $subtotal = $cartModel->total();
             }
         } catch (\Throwable $e) {
-            // silently fallback to session
+            
             $count = array_sum(array_column((array) session('cart', []), 'qty') ?: [0]);
         }
     } else {

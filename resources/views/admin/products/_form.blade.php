@@ -146,7 +146,7 @@
                         <div class="d-flex flex-wrap gap-2">
                             @foreach ($product->images as $img)
                                 @php
-                                    // use asset('storage/...') which respects current host/port/subfolder
+                                    
                                     $imgUrl = asset('storage/' . $img->path);
                                 @endphp
                                 <div
@@ -200,16 +200,16 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // slugify behavior
+            
             const titleInput = document.getElementById('title');
             const slugInput = document.getElementById('slug');
 
             function slugify(value) {
                 return String(value).toLowerCase().trim()
-                    .replace(/[^\w\s-]/g, '') // remove invalid chars
-                    .replace(/\s+/g, '-') // spaces -> -
-                    .replace(/-+/g, '-') // collapse -
-                    .replace(/^-+|-+$/g, ''); // trim -
+                    .replace(/[^\w\s-]/g, '') 
+                    .replace(/\s+/g, '-') 
+                    .replace(/-+/g, '-') 
+                    .replace(/^-+|-+$/g, ''); 
             }
             if (titleInput && slugInput) {
                 titleInput.addEventListener('blur', function() {
@@ -217,7 +217,7 @@
                 });
             }
 
-            // preview selected images
+            
             const imagesInput = document.getElementById('images');
             const previews = document.getElementById('new-previews');
 
@@ -240,7 +240,7 @@
                     wrap.appendChild(img);
                     wrap.appendChild(name);
 
-                    // radio to set primary among new uploads (first is default)
+                    
                     const primWrap = document.createElement('div');
                     primWrap.className = 'mt-2 small';
                     const radio = document.createElement('input');

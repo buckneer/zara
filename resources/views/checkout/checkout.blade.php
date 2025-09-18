@@ -190,7 +190,7 @@
     </div>
 
     <script>
-        // simple billing toggle
+        
         document.addEventListener('DOMContentLoaded', function() {
             const checkbox = document.getElementById('same_as_shipping');
             const billing = document.getElementById('billing-select');

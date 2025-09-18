@@ -6,14 +6,14 @@
     <div class="auth-wrapper">
         <div class="container">
             <div class="row gx-5 align-items-center">
-                <!-- Left image -->
+                
                 <div class="col-md-6 d-none d-md-block">
                     <div class="auth-left shadow-sm rounded"
                         style="background-image: url('https://picsum.photos/900/1200?random=3');">
                     </div>
                 </div>
 
-                <!-- Right: registration form -->
+                
                 <div class="col-12 col-md-6">
                     <div class="card auth-card p-4">
                         <div class="card-body">
@@ -83,6 +83,6 @@
                     </div>
                 </div>
             </div>
-        </div> <!-- /container -->
-    </div> <!-- /auth-wrapper -->
+        </div> 
+    </div> 
 @endsection
