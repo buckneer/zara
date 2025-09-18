@@ -11,6 +11,7 @@ use App\Models\ProductVariant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -28,6 +29,8 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+
+        
         $data = $request->validate([
             'title' => 'required|string|max:191',
             'slug' => 'required|string|max:191|unique:products,slug',

@@ -17,6 +17,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ShopController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -50,6 +51,10 @@ Route::middleware(['auth', 'is_admin'])
     ->group(function () {
         Route::resource('orders', OrderController::class);
     });
+
+Route::get('/shop/{filter?}', [ShopController::class, 'index'])
+    ->name('shop.index')
+    ->where('filter', 'man|woman|exclusive');
 
 Route::middleware(['auth', 'is_admin'])
     ->prefix('admin')

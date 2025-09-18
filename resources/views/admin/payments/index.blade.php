@@ -4,61 +4,79 @@
 
 @section('content')
 <div class="container py-4">
-    <h1 class="h4 mb-4">Payments</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4 mb-0 text-uppercase fw-bold" style="letter-spacing:.04em;">Payments</h1>
+    </div>
 
     @if(session('success'))
-        <div class="alert alert-success" role="alert">
-            {{ session('success') }}
-        </div>
+    <div class="alert alert-success" role="alert">
+        {{ session('success') }}
+    </div>
     @endif
 
-    <div class="card">
+    <div class="card border-0 p-0 mb-4">
         <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle mb-0">
-                <thead class="table-light">
+            <table class="table zara-table mb-0 align-middle">
+                <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Order</th>
-                        <th scope="col">Method</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Paid At</th>
-                        <th scope="col" class="text-end">Actions</th>
+                        <th class="zara-th zara-th-narrow">#</th>
+                        <th class="zara-th">Order</th>
+                        <th class="zara-th">Method</th>
+                        <th class="zara-th">Status</th>
+                        <th class="zara-th zara-th-center">Amount</th>
+                        <th class="zara-th">Paid At</th>
+                        <th class="zara-th zara-th-actions">Actions</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @forelse($payments as $payment)
-                        <tr>
-                            <td>{{ $payment->id }}</td>
-                            <td>
-                                <a href="{{ route('admin.orders.show', $payment->order_id) }}" class="text-decoration-none">
-                                    #{{ $payment->order_id }}
-                                </a>
-                            </td>
-                            <td>{{ $payment->method ?? '-' }}</td>
-                            <td>
-                                @if($payment->status === 'pending')
-                                    <span class="badge bg-warning text-dark">Pending</span>
-                                @elseif($payment->status === 'completed')
-                                    <span class="badge bg-success">Completed</span>
-                                @elseif($payment->status === 'failed')
-                                    <span class="badge bg-danger">Failed</span>
-                                @elseif($payment->status === 'refunded')
-                                    <span class="badge bg-secondary">Refunded</span>
-                                @else
-                                    <span class="badge bg-light text-dark">{{ ucfirst($payment->status) }}</span>
-                                @endif
-                            </td>
-                            <td class="fw-semibold">{{ number_format($payment->amount ?? 0, 2) }} €</td>
-                            <td class="text-muted">{{ $payment->paid_at?->format('Y-m-d H:i') ?? '-' }}</td>
-                            <td class="text-end">
-                                <a href="{{ route('admin.payments.show', $payment) }}" class="btn btn-sm btn-outline-primary">View</a>
-                            </td>
-                        </tr>
+                    <tr class="zara-row">
+                        <td class="zara-td zara-td-narrow text-muted">{{ $payment->id }}</td>
+
+                        <td class="zara-td">
+                            <a href="{{ route('admin.orders.show', $payment->order_id) }}"
+                                class="fw-semibold text-decoration-none">
+                                #{{ $payment->order_id }}
+                            </a>
+                        </td>
+
+                        <td class="zara-td">{{ $payment->method ?? '-' }}</td>
+
+                        <td class="zara-td">
+                            @php $status = $payment->status; @endphp
+                            @if($status === 'pending')
+                            <span class="badge zara-badge-status zara-status-pending">Pending</span>
+                            @elseif($status === 'completed')
+                            <span class="badge zara-badge-status zara-status-completed">Completed</span>
+                            @elseif($status === 'failed')
+                            <span class="badge zara-badge-status zara-status-cancelled">Failed</span>
+                            @elseif($status === 'refunded')
+                            <span class="badge zara-badge-status zara-status-refunded">Refunded</span>
+                            @else
+                            <span class="badge zara-badge-status">{{ ucfirst($status) }}</span>
+                            @endif
+                        </td>
+
+                        <td class="zara-td zara-td-center fw-semibold">
+                            {{ number_format($payment->amount ?? 0, 2) }} €
+                        </td>
+
+                        <td class="zara-td text-muted">
+                            {{ $payment->paid_at?->format('Y-m-d H:i') ?? '-' }}
+                        </td>
+
+                        <td class="zara-td zara-td-actions">
+                            <div class="zara-actions">
+                                <a href="{{ route('admin.payments.show', $payment) }}"
+                                    class="btn btn-sm btn-outline-primary zara-action">View</a>
+                            </div>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="7" class="text-center py-5 text-muted">No payments found.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">No payments found.</td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>

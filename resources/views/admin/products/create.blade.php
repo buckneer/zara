@@ -4,7 +4,7 @@
 <div class="container py-8">
     <h1>Create product</h1>
 
-    <form action="{{ route('admin.products.store') }}" method="POST">
+    <form action="{{ route('admin.products.store') }}" enctype="multipart/form-data" method="POST">
         @include('admin.products._form')
     </form>
 </div>

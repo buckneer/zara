@@ -17,16 +17,16 @@
             {{-- Center nav links --}}
             <ul class="navbar-nav mx-auto nav-main align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">New</a>
+                    <a class="nav-link" href="{{ route("shop.index") }}">New</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Women</a>
+                    <a class="nav-link" href="{{ route('shop.index', ['filter' => 'woman']) }}">Women</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Men</a>
+                    <a class="nav-link" href="{{ route('shop.index', ['filter' => 'man']) }}">Men</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Editorial</a>
+                    <a class="nav-link" href="{{ route("shop.index") }}">Editorial</a>
                 </li>
             </ul>
 
@@ -47,26 +47,51 @@
                     </a>
                 </li>
 
-                {{-- Cart (keeps your fallback logic) --}}
                 @php
+                use App\Models\Cart;
+
                 $cartCount = 0;
-                    if (auth()->check()) {
-                        if (method_exists(auth()->user(), 'cartItems')) {
-                            try { $cartCount = auth()->user()->cartItems()->count(); } catch (\Throwable $e) { $cartCount = 0; }
-                        } elseif (method_exists(auth()->user(), 'cart')) {
-                            try { $cartCount = auth()->user()->cart()->count(); } catch (\Throwable $e) { $cartCount = 0; }
-                        } else {
-                            $cartCount = session('cart.items') ? count(session('cart.items')) : 0;
-                        }
-                    } else {
-                        $cartCount = session('cart.items') ? count(session('cart.items')) : 0;
-                    }
+
+                if (auth()->check()) {
+                // count total qty in DB cart for the user (safe/fallbacks)
+                try {
+                $cart = Cart::where('user_id', auth()->id())->with('items')->first();
+                if ($cart) {
+                // sum of item quantities
+                $cartCount = $cart->items->sum('qty');
+                } else {
+                $cartCount = 0;
+                }
+                } catch (\Throwable $e) {
+                $cartCount = 0;
+                }
+                } else {
+                // guest: session stores an array under 'cart' => [ 'product:variant' => [...], ... ]
+                $sessionCart = session('cart', []);
+                if (is_array($sessionCart) && !empty($sessionCart)) {
+                // If you want the number of distinct lines use count($sessionCart)
+                // If you want total items (qty sum) use array_sum of 'qty' values:
+                $cartCount = array_sum(array_map(fn($line) => (int)($line['qty'] ?? 0), $sessionCart));
+                } else {
+                $cartCount = 0;
+                }
+                }
                 @endphp
 
                 <li class="nav-item me-2 position-relative">
-                    <a class="nav-link icon-btn" href="{{ route("cart.index") }}" aria-label="Cart">
-                        <i class="bi bi-cart"></i>
-                        @if($cartCount > 0)
+                    <a class="nav-link icon-btn d-flex align-items-center" href="{{ route('cart.index') }}" aria-label="Cart" aria-haspopup="false">
+                        {{-- Inline SVG cart icon (accessible) --}}
+                        <svg class="cart-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                            <path d="M6 6h13l-1.4 8.4a1 1 0 0 1-.98.76H9.4a1 1 0 0 1-.98-.76L6 6z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            <circle cx="10" cy="20" r="1.2" fill="currentColor" />
+                            <circle cx="18" cy="20" r="1.2" fill="currentColor" />
+                        </svg>
+
+                        {{-- Visible count for screen readers --}}
+                        <span class="visually-hidden">Cart ({{ $cartCount ?? 0 }})</span>
+
+                        {{-- Numeric badge (only shown when >0) --}}
+                        @if(!empty($cartCount))
                         <span class="cart-badge">{{ $cartCount }}</span>
                         @endif
                     </a>
@@ -90,7 +115,7 @@
                 </li>
                 @else
                 <li class="nav-item me-2 d-none d-lg-block">
-                    <a class="nav-link"href="{{ route("orders.index") }}">Orders</a>
+                    <a class="nav-link" href="{{ route("orders.index") }}">Orders</a>
                 </li>
                 @endif
 
