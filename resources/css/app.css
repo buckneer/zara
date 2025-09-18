@@ -123,7 +123,7 @@
     }
     .search-input {
         display: none;
-    } /* hide search on small */
+    } 
     .site-navbar {
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
@@ -341,7 +341,7 @@ body {
     font-weight: 700;
 }
 
-/* Responsive tweaks */
+
 @media (max-width: 767px) {
     .product-img {
         height: 320px;
@@ -359,13 +359,13 @@ body {
     }
 }
 
-/* Zara-like minimal B/W form */
+
 .zara-form {
     font-family: "Helvetica Neue", Arial, sans-serif;
     color: #111;
 }
 
-/* Inputs: border-bottom only, subtle spacing */
+
 .zara-form .form-control,
 .zara-form .form-select,
 .zara-form textarea {
@@ -385,18 +385,18 @@ body {
     border-color: #000;
 }
 
-/* Upper labels look */
+
 .zara-form .form-label {
     color: #222;
     letter-spacing: 0.08em;
 }
 
-/* Card look */
+
 .zara-form .card {
     border-radius: 0.25rem;
 }
 
-/* Thumbs */
+
 .image-thumb {
     width: 140px;
     padding: 6px;
@@ -423,7 +423,7 @@ body {
     color: #444;
 }
 
-/* New preview styling */
+
 .preview-thumb {
     width: 140px;
     padding: 6px;
@@ -440,7 +440,7 @@ body {
     filter: grayscale(40%);
 }
 
-/* Button */
+
 .zara-form .btn-dark {
     background: #000;
     border-color: #000;
@@ -452,15 +452,15 @@ body {
     border-color: #111;
 }
 
-/* small helpers */
+
 .zara-form .form-text {
     color: #6c6c6c;
 }
 
-/* Zara admin table utilities (reusable) */
+
 .zara-table {
     border-collapse: separate;
-    border-spacing: 0 10px; /* airy rows */
+    border-spacing: 0 10px; 
     width: 100%;
     background: transparent;
 }
@@ -487,14 +487,13 @@ body {
     padding-right: 24px;
 }
 
-/* row card effect: each tbody row looks like a soft card */
 .zara-table tbody tr.zara-row {
     background: #fff;
     border: 1px solid #eee;
     border-radius: 6px;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
     margin-bottom: 10px;
-    display: table-row; /* keep table layout */
+    display: table-row; 
 }
 
 .zara-table tbody td.zara-td {
@@ -513,7 +512,7 @@ body {
     text-align: center;
 }
 
-/* actions wrapper */
+
 .zara-actions {
     display: flex;
     gap: 8px;
@@ -521,13 +520,13 @@ body {
     align-items: center;
 }
 
-/* small consistent action spacing and size */
+
 .zara-action {
     padding: 0.35rem 0.6rem;
     font-size: 0.8rem;
 }
 
-/* badges */
+
 .zara-badge-active {
     background: #000;
     color: #fff;
@@ -546,29 +545,28 @@ body {
     font-size: 0.75rem;
 }
 
-/* table responsive: remove default bootstrap stripe visuals to keep minimal look */
+
 .table-striped tbody tr:nth-of-type(odd) {
     background: transparent;
 }
 
-/* pagination alignment (you already output links) */
+
 .pagination {
     gap: 6px;
 }
 
-/* smaller, muted slug under name */
+
 .zara-table .small.text-muted {
     color: #8a8a8a;
 }
 
-/* tweak hover — subtle lift */
+
 .zara-table tbody tr.zara-row:hover {
     transform: translateY(-3px);
     transition: transform 0.12s ease;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
 }
 
-/* Keep buttons consistent — reuse existing .btn-dark from Zara styles */
 .btn-dark {
     background: #000;
     border-color: #000;
@@ -579,7 +577,7 @@ body {
     border-color: #111;
 }
 
-/* utility: force table cells to behave like cards while keeping table layout */
+
 .zara-table,
 .zara-table thead,
 .zara-table tbody,
@@ -600,13 +598,13 @@ body {
   text-transform: uppercase;
   letter-spacing: .06em;
 
-  /* make sure these win over bootstrap */
+
   background-color: #f5f5f5 !important;
   color: #111 !important;
   border: 1px solid #eee !important;
 }
 
-/* variants (tweak colors as you like) */
+
 .badge.zara-status-pending   { background-color:#fff3cd !important; border-color:#f0e6b8 !important; color:#111 !important; }
 .badge.zara-status-processing{ background-color:#e8f6ff !important; border-color:#d1e9ff !important; color:#111 !important; }
 .badge.zara-status-shipped   { background-color:#eef4ff !important; border-color:#d7e8ff !important; color:#111 !important; }
@@ -614,14 +612,13 @@ body {
 .badge.zara-status-cancelled { background-color:#f8f9fa !important; border-color:#e9ecef !important; color:#666 !important; }
 .badge.zara-status-refunded  { background-color:#e9e9e9 !important; border-color:#dcdcdc !important; color:#333 !important; }
 
-/* if you want a distinct "failed" (red) look */
+
 .badge.zara-status-failed {
   background-color: #f8d7da !important;
   border-color: #f5c6cb !important;
   color: #842029 !important;
 }
 
-/* Checkout / form cards & list - Zara monochrome */
 .zara-card { background: #fff; border:1px solid #eee; border-radius:6px; box-shadow:0 1px 0 rgba(0,0,0,.02); overflow:hidden; }
 .zara-card-header { background:transparent; border-bottom:1px solid #f0f0f0; padding:12px 16px; font-weight:700; text-transform:uppercase; font-size:.85rem; color:#111; letter-spacing:.06em; }
 .zara-list-group { border-radius:6px; overflow:hidden; border:1px solid #eee; }
@@ -630,11 +627,11 @@ body {
 .zara-list-item input[type="radio"] { margin-top:6px; }
 .zara-list-item:hover { background:#fafafa; }
 
-/* neutral alerts suitable for B/W theme */
+
 .alert-secondary { background:#f5f5f5; color:#111; border:0; }
 .alert-dark { background:#111; color:#fff; border:0; }
 
-/* inputs & selects — subtle underline treatment (optional, consistent with zara-form) */
+
 .zara-form .form-control,
 .zara-form .form-select {
   border-radius:0;
@@ -647,21 +644,21 @@ body {
 .zara-form .form-control:focus,
 .zara-form .form-select:focus { border-color:#000; box-shadow:none; }
 
-/* buttons */
+
 .btn-dark { background:#000; border-color:#000; color:#fff; border-radius:.25rem; }
 .btn-outline-dark { color:#111; border-color:#111; background:transparent; }
 .btn-outline-dark:hover { background:#111; color:#fff; }
 
-/* small utilities */
+
 .text-muted { color:#6c6c6c !important; }
 .small { font-size:.85rem; }
 
 
-/* icon sizing & alignment */
+
 .icon-btn { color: inherit; position: relative; display: inline-flex; align-items: center; gap: .5rem; }
 .cart-svg { display: block; width: 22px; height: 22px; }
 
-/* badge */
+
 .cart-badge {
   position: absolute;
   top: -6px;
@@ -676,12 +673,12 @@ body {
   font-weight: 600;
   line-height: 1;
   border-radius: 999px;
-  background: #000;            /* change to suit theme */
+  background: #000;           
   color: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 
-/* small bump animation when an item is added (optional) */
+
 .icon-btn.bump { transform-origin: center; animation: cart-bump 360ms cubic-bezier(.2,.8,.2,1); }
 @keyframes cart-bump {
   0%   { transform: scale(1); }
@@ -690,7 +687,7 @@ body {
   100% { transform: scale(1); }
 }
 
-/* utility for screen readers (Bootstrap provides .visually-hidden, but included if not) */
+
 .visually-hidden {
   position: absolute !important;
   height: 1px; width: 1px;
