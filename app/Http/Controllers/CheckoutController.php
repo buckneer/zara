@@ -26,7 +26,7 @@ class CheckoutController extends Controller
 
         $addresses = $user->addresses()->orderBy('id', 'desc')->get();
 
-        // compute subtotal using model helper
+        
         $subtotal = (float) $cart->total();
 
         return view('checkout.checkout', compact('cart', 'addresses', 'subtotal'));
@@ -50,7 +50,7 @@ class CheckoutController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        // ensure shipping address belongs to user
+        
         $shipping = Address::where('id', $data['shipping_address_id'])->where('user_id', $user->id)->first();
         if (!$shipping) {
             return redirect()->back()->withInput()->with('error', 'Invalid shipping address.');
@@ -65,10 +65,10 @@ class CheckoutController extends Controller
             }
         }
 
-        // pricing rules (simple): flat shipping or free over 100
+        
         $subtotal = (float) $cart->total();
         $shipping_total = $subtotal >= 100 ? 0.00 : 5.00;
-        $tax_rate = 0.20; // 20%
+        $tax_rate = 0.20; 
         $tax_total = round($subtotal * $tax_rate, 2);
         $discount_total = 0.00;
         $grand_total = round($subtotal + $shipping_total + $tax_total - $discount_total, 2);
@@ -92,7 +92,7 @@ class CheckoutController extends Controller
                 'placed_at' => Carbon::now(),
             ]);
 
-            // create order items from cart items
+            
             foreach ($cart->items as $item) {
                 $unitPrice = (float) ($item->unit_price ?? ($item->product->price ?? 0));
                 $quantity = (int) $item->qty;
@@ -109,34 +109,34 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            // create payment record depending on method (simple)
+            
             if ($data['payment_method'] === 'card') {
                 $payment = Payment::create([
                     'order_id' => $order->id,
                     'amount' => $grand_total,
                     'method' => 'card',
                     'transaction_id' => strtoupper('TX-'.substr(uniqid(), -8)),
-                    'status' => 'succeeded', // NOTE: in a real app integrate with gateway and confirm
+                    'status' => 'succeeded', 
                     'details' => ['simulated' => true],
                     'paid_at' => Carbon::now(),
                 ]);
 
-                // mark order as paid
+                
                 $order->payment_status = 'paid';
                 $order->save();
             } else {
-                // cod (cash on delivery) or other -> leave unpaid
+                
             }
 
-            // clear cart items
+            
             $cart->items()->delete();
-            // optionally remove cart record, but we keep it
+            
             DB::commit();
 
             return redirect()->route('checkout.thankyou', ['order' => $order->id]);
         } catch (\Throwable $e) {
             DB::rollBack();
-            // log($e->getMessage()); // optional
+            
             return redirect()->back()->withInput()->with('error', 'Could not place order. Try again.');
         }
     }

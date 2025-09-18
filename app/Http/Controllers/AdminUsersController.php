@@ -97,7 +97,7 @@ class AdminUsersController extends Controller
 
             $user->save();
 
-            // sync roles (if missing -> empty array)
+            
             $user->roles()->sync($data['roles'] ?? []);
         });
 
@@ -111,7 +111,7 @@ class AdminUsersController extends Controller
             return redirect()->back()->with('error', 'You cannot delete your own account while logged in.');
         }
 
-        // Prevent deleting the last user with role 'admin' if such role exists
+        
         $adminRole = Role::where('name', 'admin')->first();
         if ($adminRole && $user->roles()->where('role_id', $adminRole->id)->exists()) {
             $adminCount = $adminRole->users()->count();
@@ -125,10 +125,7 @@ class AdminUsersController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'User deleted.');
     }
 
-    /**
-     * Assign a role to a user via POST.
-     * Expects 'user_id' in request.
-     */
+
     public function assignRole(Request $request, Role $role)
     {
         $data = $request->validate(['user_id' => 'required|exists:users,id']);
@@ -137,15 +134,14 @@ class AdminUsersController extends Controller
         return redirect()->back()->with('success', 'Role assigned.');
     }
 
-    /**
-     * Revoke role from a user via POST.
-     */
+
+
     public function revokeRole(Request $request, Role $role)
     {
         $data = $request->validate(['user_id' => 'required|exists:users,id']);
         $user = User::findOrFail($data['user_id']);
 
-        // Protect last admin from being revoked
+        
         if ($role->name === 'admin') {
             $adminCount = $role->users()->count();
             if ($adminCount <= 1 && $user->roles()->where('role_id', $role->id)->exists()) {

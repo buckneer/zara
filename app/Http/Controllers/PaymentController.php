@@ -24,7 +24,7 @@ class PaymentController extends Controller
 
         $payment->update($data);
 
-        // optionally update order payment_status
+        
         if ($payment->status === 'succeeded') {
             $order = $payment->order;
             $order->payment_status = 'paid';

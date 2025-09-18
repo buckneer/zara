@@ -14,11 +14,7 @@ class CartController extends Controller
 {
     protected $sessionKey = 'cart';
 
-    /**
-     * Show cart.
-     * For guests: reads session cart and enriches.
-     * For auth users: returns DB cart with items.
-     */
+    
     public function index(Request $request)
     {
         if (Auth::check()) {
@@ -40,7 +36,7 @@ class CartController extends Controller
             ]);
         }
 
-        // guest: session
+        
         $cart = session($this->sessionKey, []);
         $items = [];
         $subtotal = 0;
@@ -65,9 +61,7 @@ class CartController extends Controller
         return view('guest.cart.index', compact('items', 'subtotal'));
     }
 
-    /**
-     * Add to cart (session or DB).
-     */
+   
     public function add(Request $request)
     {
         $request->merge(['variant_id' => $request->input('variant_id') ?: null]);
@@ -84,7 +78,7 @@ class CartController extends Controller
         if (Auth::check()) {
             $cart = $this->getOrCreateCartForUser(Auth::id());
 
-            // find existing item
+            
             $item = $cart->items()->where('product_id', $data['product_id'])->where('variant_id', $data['variant_id'] ?? null)->first();
 
             $unitPrice = $this->resolvePrice($data['product_id'], $data['variant_id']);
@@ -104,7 +98,7 @@ class CartController extends Controller
             return back()->with('success', 'Added to cart.');
         }
 
-        // guest -> session
+        
         $cart = session($this->sessionKey, []);
         if (isset($cart[$key])) {
             $cart[$key]['qty'] = max(1, $cart[$key]['qty'] + $qty);
@@ -120,9 +114,7 @@ class CartController extends Controller
         return back()->with('success', 'Added to cart.');
     }
 
-    /**
-     * Update a line.
-     */
+    
     public function update(Request $request)
     {
         $data = $request->validate([
@@ -149,7 +141,7 @@ class CartController extends Controller
             return back()->with('success', 'Cart updated.');
         }
 
-        // guest session
+        
         $cart = session($this->sessionKey, []);
         if (! isset($cart[$data['key']])) {
             return back()->with('error', 'Cart item not found.');
@@ -163,9 +155,7 @@ class CartController extends Controller
         return back()->with('success', 'Cart updated.');
     }
 
-    /**
-     * Remove a line.
-     */
+    
     public function remove(Request $request)
     {
         $data = $request->validate(['key' => 'required|string']);
@@ -187,10 +177,7 @@ class CartController extends Controller
         return back()->with('success', 'Removed from cart.');
     }
 
-    /**
-     * Merge session cart into DB cart for a user (idempotent).
-     * Useful to call when a guest registers or logs in.
-     */
+   
     public function mergeSessionIntoDatabase(Request $request, $userId = null)
     {
         $userId = $userId ?? Auth::id();
@@ -224,22 +211,18 @@ class CartController extends Controller
                 ]);
             }
 
-            // clear session cart after merge
+            
             session()->forget($this->sessionKey);
         });
     }
 
-    /**
-     * Get or create a Cart model for the given user id.
-     */
+   
     protected function getOrCreateCartForUser(int $userId): Cart
     {
         return Cart::firstOrCreate(['user_id' => $userId], ['meta' => []]);
     }
 
-    /**
-     * Resolve price for product/variant (returns numeric price)
-     */
+
     protected function resolvePrice(int $productId, $variantId = null)
     {
         if ($variantId) {

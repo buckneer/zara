@@ -44,11 +44,11 @@ class ProductController extends Controller
             'category_ids' => 'nullable|array',
             'category_ids.*' => 'exists:categories,id',
 
-            // images
+            
             'images' => 'nullable|array',
             'images.*' => 'image|max:5120',
 
-            // variants (optional array of arrays)
+            
             'variants' => 'nullable|array',
             'variants.*.sku' => 'nullable|string|max:191',
             'variants.*.name' => 'nullable|string|max:191',
@@ -67,10 +67,10 @@ class ProductController extends Controller
                 $product->categories()->sync($data['category_ids']);
             }
 
-            // handle inline variants (create)
+            
             if ($request->has('variants') && is_array($request->input('variants'))) {
                 foreach ($request->input('variants') as $v) {
-                    // skip entirely blank variant rows
+                    
                     if (empty(Arr::filter($v))) continue;
                     $product->variants()->create([
                         'sku' => $v['sku'] ?? null,
@@ -85,15 +85,15 @@ class ProductController extends Controller
                 }
             }
 
-            // handle uploaded images
+            
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $idx => $file) {
-                    $path = $file->store('products', 'public'); // products/abcd.jpg
+                    $path = $file->store('products', 'public'); 
                     $product->images()->create([
                         'path' => $path,
                         'alt' => $product->title,
                         'position' => $idx,
-                        'is_primary' => $idx === 0, // default first uploaded as primary if no other set
+                        'is_primary' => $idx === 0, 
                     ]);
                 }
             }
@@ -131,14 +131,14 @@ class ProductController extends Controller
             'category_ids' => 'nullable|array',
             'category_ids.*' => 'exists:categories,id',
 
-            // images
+            
             'images' => 'nullable|array',
             'images.*' => 'image|max:5120',
-            'existing_primary' => 'nullable|integer', // id of current image to set primary
+            'existing_primary' => 'nullable|integer', 
             'delete_image_ids' => 'nullable|array',
             'delete_image_ids.*' => 'integer|exists:product_images,id',
 
-            // variants inline
+            
             'variants' => 'nullable|array',
             'variants.*.id' => 'nullable|integer|exists:product_variants,id',
             'variants.*.sku' => 'nullable|string|max:191',
@@ -156,10 +156,10 @@ class ProductController extends Controller
 
             $product->update($data);
 
-            // sync categories
+            
             $product->categories()->sync($data['category_ids'] ?? []);
 
-            // handle deletion of existing images (if requested)
+            
             if (!empty($data['delete_image_ids'])) {
                 $toDelete = \App\Models\ProductImage::whereIn('id', $data['delete_image_ids'])->where('product_id', $product->id)->get();
                 foreach ($toDelete as $img) {
@@ -168,7 +168,7 @@ class ProductController extends Controller
                 }
             }
 
-            // handle newly uploaded images
+            
             if ($request->hasFile('images')) {
                 $currentCount = $product->images()->count();
                 foreach ($request->file('images') as $file) {
@@ -182,10 +182,10 @@ class ProductController extends Controller
                 }
             }
 
-            // set primary image (existing_primary is image id)
+            
             if ($request->filled('existing_primary')) {
                 $primaryId = (int)$request->input('existing_primary');
-                // set all images is_primary false then set selected true
+                
                 $product->images()->update(['is_primary' => false]);
                 $img = $product->images()->where('id', $primaryId)->first();
                 if ($img) {
@@ -193,7 +193,7 @@ class ProductController extends Controller
                     $img->save();
                 }
             } else {
-                // if no primary supplied, ensure at least one primary exists
+                
                 if ($product->images()->where('is_primary', true)->count() === 0) {
                     $first = $product->images()->first();
                     if ($first) {
@@ -203,10 +203,10 @@ class ProductController extends Controller
                 }
             }
 
-            // variants handling: create / update / delete
+            
             if ($request->has('variants') && is_array($request->input('variants'))) {
                 foreach ($request->input('variants') as $v) {
-                    // if id present -> update or delete
+                    
                     if (!empty($v['id'])) {
                         $variant = ProductVariant::where('id', $v['id'])->where('product_id', $product->id)->first();
                         if (! $variant) continue;
@@ -225,7 +225,7 @@ class ProductController extends Controller
                             'attributes' => $v['attributes'] ?? $variant->attributes,
                         ]);
                     } else {
-                        // create new variant (skip if entirely blank)
+                        
                         if (empty(Arr::filter($v))) continue;
                         $product->variants()->create([
                             'sku' => $v['sku'] ?? null,
@@ -249,7 +249,7 @@ class ProductController extends Controller
 
     public function destroy(Request $request, Product $product)
     {
-        $product->delete(); // soft delete
+        $product->delete(); 
         return $request->wantsJson()
             ? response()->json(['message' => 'deleted'])
             : redirect()->route('products.index')->with('success', 'Product removed.');

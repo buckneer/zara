@@ -16,13 +16,13 @@ class ShopController extends Controller
 
     public function index(Request $request, $filter = null)
     {
-        // base query
+        
         $query = Product::with(['images', 'variants', 'categories'])->active();
 
-        // normalize filter (null-safe)
+        
         $filterNorm = $filter ? Str::lower(trim($filter)) : null;
 
-        // alias map so links like "men" or "women" still work
+        
         $aliasMap = [
             'men' => 'man',
             'women' => 'woman',
@@ -30,21 +30,21 @@ class ShopController extends Controller
 
         if ($filterNorm) {
             if ($filterNorm === 'exclusive') {
-                // no extra filter, show all active
+                
             } elseif (in_array($filterNorm, ['man', 'woman', 'men', 'women'])) {
                 $canonical = $aliasMap[$filterNorm] ?? $filterNorm;
 
-                // IMPORTANT: qualify the column name to avoid SQL ambiguity
+                
                 $query->whereHas('categories', function ($q) use ($canonical) {
                     $q->where('categories.slug', $canonical);
                 });
             } else {
-                // unknown filter -> return no results (keeps behaviour from before)
+                
                 $query->whereRaw('0 = 1');
             }
         }
 
-        // price filters
+        
         if ($request->filled('price_min')) {
             $query->where('price', '>=', (float)$request->price_min);
         }
@@ -52,7 +52,7 @@ class ShopController extends Controller
             $query->where('price', '<=', (float)$request->price_max);
         }
 
-        // sorting
+        
         $sort = $request->get('sort', 'position');
         switch ($sort) {
             case 'price_asc':
@@ -68,10 +68,10 @@ class ShopController extends Controller
 
         $products = $query->paginate(12)->appends($request->except('page'));
 
-        // sidebar categories (man/woman)
+        
         $categories = Category::whereIn('slug', ['man', 'woman'])->get();
 
-        // Build cart view model to match CartController@index guest/auth shapes
+        
         $cartItems = [];
         $subtotal = 0.0;
 

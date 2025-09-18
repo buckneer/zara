@@ -36,7 +36,7 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
-        // be careful: in production you might want to soft-delete or prevent deletion
+        
         $order->delete();
         return request()->wantsJson() ? response()->json(['message'=>'deleted']) : redirect()->route('orders.index')->with('success','Order removed.');
     }
