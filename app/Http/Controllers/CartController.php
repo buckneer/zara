@@ -14,54 +14,124 @@ class CartController extends Controller
 {
     protected $sessionKey = 'cart';
 
-    
     public function index(Request $request)
     {
+        $items = [];
+        $subtotalBefore = 0.0;
+        $subtotalAfter = 0.0;
+
         if (Auth::check()) {
             $cart = $this->getOrCreateCartForUser(Auth::user()->id);
             $cart->load(['items.product.images', 'items.variant']);
-            $subtotal = $cart->total();
-            return view('guest.cart.index', [
-                'items' => $cart->items->map(function ($it) {
-                    return [
-                        'key' => "{$it->product_id}:" . ($it->variant_id ?? '0'),
-                        'product' => $it->product,
-                        'variant' => $it->variant,
-                        'qty' => $it->qty,
-                        'unit_price' => $it->unit_price,
-                        'line_total' => ($it->unit_price ?? ($it->product->price ?? 0)) * $it->qty,
-                    ];
-                })->toArray(),
-                'subtotal' => $subtotal,
-            ]);
+
+            foreach ($cart->items as $it) {
+                $qty = (int) ($it->qty ?? 0);
+                if ($qty <= 0) continue;
+
+                $product = $it->product; // eager loaded
+                if (! $product) continue;
+
+                // Original unit price: prefer stored unit_price on cart item (price at add-time)
+                $unitOriginal = (float) ($it->unit_price ?? ($product->price ?? 0.0));
+
+                // Normalize discount percent from product
+                $discountRaw = (float) ($product->discount_percent ?? 0);
+                if ($discountRaw > 0 && $discountRaw <= 1) {
+                    $discountPercent = $discountRaw * 100;
+                } else {
+                    $discountPercent = $discountRaw;
+                }
+                $discountPercent = max(0, min(100, $discountPercent));
+
+                // Discounted unit price
+                $unitDiscounted = $discountPercent > 0
+                    ? max(0, $unitOriginal * (1 - $discountPercent / 100))
+                    : $unitOriginal;
+
+                // Line totals
+                $lineOriginal = $unitOriginal * $qty;
+                $lineDiscounted = $unitDiscounted * $qty;
+
+                // Primary image (if available)
+                $img = $product->images->where('is_primary', true)->first() ?? $product->images->first();
+
+                $items[] = [
+                    'key' => "{$it->product_id}:" . ($it->variant_id ?? '0'),
+                    'product' => $product,
+                    'variant' => $it->variant,
+                    'qty' => $qty,
+                    'unit_price_original' => round($unitOriginal, 2),
+                    'unit_price_discounted' => round($unitDiscounted, 2),
+                    'line_total_original' => round($lineOriginal, 2),
+                    'line_total_discounted' => round($lineDiscounted, 2),
+                    'discount_percent' => $discountPercent,
+                    'image' => $img,
+                ];
+
+                $subtotalBefore += $lineOriginal;
+                $subtotalAfter += $lineDiscounted;
+            }
+
+        } else {
+            // Session cart
+            $cart = session($this->sessionKey, []);
+            foreach ($cart as $key => $item) {
+                $product = Product::with('images')->find($item['product_id']);
+                if (! $product) continue;
+
+                $variant = $item['variant_id'] ? ProductVariant::find($item['variant_id']) : null;
+                $price = $variant && $variant->price !== null ? (float)$variant->price : (float)$product->price;
+                $qty = max(1, (int)($item['qty'] ?? 1));
+
+                // Normalize discount percent from product
+                $discountRaw = (float) ($product->discount_percent ?? 0);
+                if ($discountRaw > 0 && $discountRaw <= 1) {
+                    $discountPercent = $discountRaw * 100;
+                } else {
+                    $discountPercent = $discountRaw;
+                }
+                $discountPercent = max(0, min(100, $discountPercent));
+
+                $unitOriginal = (float)$price;
+                $unitDiscounted = $discountPercent > 0
+                    ? max(0, $unitOriginal * (1 - $discountPercent / 100))
+                    : $unitOriginal;
+
+                $lineOriginal = $unitOriginal * $qty;
+                $lineDiscounted = $unitDiscounted * $qty;
+
+                $img = $product->images->where('is_primary', true)->first() ?? $product->images->first();
+                
+                $items[$key] = [
+                    'key' => $key,
+                    'product' => $product,
+                    'variant' => $variant,
+                    'qty' => $qty,
+                    'unit_price_original' => round($unitOriginal, 2),
+                    'unit_price_discounted' => round($unitDiscounted, 2),
+                    'line_total_original' => round($lineOriginal, 2),
+                    'line_total_discounted' => round($lineDiscounted, 2),
+                    'discount_percent' => $discountPercent,
+                    'image' => $img,
+                ];
+
+                $subtotalBefore += $lineOriginal;
+                $subtotalAfter += $lineDiscounted;
+            }
         }
 
-        
-        $cart = session($this->sessionKey, []);
-        $items = [];
-        $subtotal = 0;
-        foreach ($cart as $key => $item) {
-            $product = Product::with('images')->find($item['product_id']);
-            if (! $product) continue;
-            $variant = $item['variant_id'] ? ProductVariant::find($item['variant_id']) : null;
-            $price = $variant && $variant->price !== null ? $variant->price : $product->price;
-            $qty = max(1, (int)$item['qty']);
-            $lineTotal = $price * $qty;
-            $items[$key] = [
-                'key' => $key,
-                'product' => $product,
-                'variant' => $variant,
-                'qty' => $qty,
-                'unit_price' => $price,
-                'line_total' => $lineTotal,
-            ];
-            $subtotal += $lineTotal;
-        }
+        $totalDiscount = max(0, $subtotalBefore - $subtotalAfter);
+        $grandTotal = max(0, $subtotalAfter);
 
-        return view('guest.cart.index', compact('items', 'subtotal'));
+        // Keep backward compatibility: 'subtotal' is before discounts (as previous view expected)
+        return view('guest.cart.index', [
+            'items' => $items,
+            'subtotal' => round($subtotalBefore, 2),
+            'total_discount' => round($totalDiscount, 2),
+            'grand_total' => round($grandTotal, 2),
+        ]);
     }
 
-   
     public function add(Request $request)
     {
         $request->merge(['variant_id' => $request->input('variant_id') ?: null]);
@@ -78,7 +148,6 @@ class CartController extends Controller
         if (Auth::check()) {
             $cart = $this->getOrCreateCartForUser(Auth::id());
 
-            
             $item = $cart->items()->where('product_id', $data['product_id'])->where('variant_id', $data['variant_id'] ?? null)->first();
 
             $unitPrice = $this->resolvePrice($data['product_id'], $data['variant_id']);
@@ -98,7 +167,6 @@ class CartController extends Controller
             return back()->with('success', 'Added to cart.');
         }
 
-        
         $cart = session($this->sessionKey, []);
         if (isset($cart[$key])) {
             $cart[$key]['qty'] = max(1, $cart[$key]['qty'] + $qty);
@@ -114,7 +182,6 @@ class CartController extends Controller
         return back()->with('success', 'Added to cart.');
     }
 
-    
     public function update(Request $request)
     {
         $data = $request->validate([
@@ -141,7 +208,6 @@ class CartController extends Controller
             return back()->with('success', 'Cart updated.');
         }
 
-        
         $cart = session($this->sessionKey, []);
         if (! isset($cart[$data['key']])) {
             return back()->with('error', 'Cart item not found.');
@@ -155,7 +221,6 @@ class CartController extends Controller
         return back()->with('success', 'Cart updated.');
     }
 
-    
     public function remove(Request $request)
     {
         $data = $request->validate(['key' => 'required|string']);
@@ -177,7 +242,6 @@ class CartController extends Controller
         return back()->with('success', 'Removed from cart.');
     }
 
-   
     public function mergeSessionIntoDatabase(Request $request, $userId = null)
     {
         $userId = $userId ?? Auth::id();
@@ -211,17 +275,15 @@ class CartController extends Controller
                 ]);
             }
 
-            
+            // clear session cart
             session()->forget($this->sessionKey);
         });
     }
 
-   
     protected function getOrCreateCartForUser(int $userId): Cart
     {
         return Cart::firstOrCreate(['user_id' => $userId], ['meta' => []]);
     }
-
 
     protected function resolvePrice(int $productId, $variantId = null)
     {

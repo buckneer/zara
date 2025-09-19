@@ -18,10 +18,10 @@ class ShopController extends Controller
     {
         $query = Product::with(['images', 'variants', 'categories'])->active();
 
-        // Normalize incoming filter to slug form
+        
         $filterNorm = $filter ? Str::slug($filter, '-') : null;
 
-        // Aliases for common slugs
+       
         $aliasMap = [
             'men' => 'man',
             'women' => 'woman',
@@ -32,17 +32,16 @@ class ShopController extends Controller
         if ($filterNorm) {
             $canonical = $aliasMap[$filterNorm] ?? $filterNorm;
 
-            // Find category by slug
+            
             $selectedCategory = Category::where('slug', $canonical)->first();
 
             if ($selectedCategory) {
-                // Filter by category id (safer)
+              
                 $query->whereHas('categories', function ($q) use ($selectedCategory) {
                     $q->where('categories.id', $selectedCategory->id);
                 });
             } else {
-                // If no matching category, return empty set.
-                // If you prefer a 404 instead, replace the next line with: abort(404);
+               
                 $query->whereRaw('0 = 1');
             }
         }
@@ -71,10 +70,9 @@ class ShopController extends Controller
 
         $products = $query->paginate(12)->appends($request->except('page'));
 
-        // Fetch categories for UI (adjust ordering as you like)
+        
         $categories = Category::orderBy('position', 'asc')->get();
 
-        // Cart building (unchanged)
         $cartItems = [];
         $subtotal = 0.0;
 
@@ -118,7 +116,6 @@ class ShopController extends Controller
             $subtotal = (float)$subtotal;
         }
 
-        // pass selectedCategory to view so you can highlight/filter UI
         return view('shop.index', compact('products', 'categories', 'selectedCategory', 'filter', 'cartItems', 'subtotal'));
     }
 }

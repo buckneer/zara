@@ -80,8 +80,63 @@
                     @endforelse
                 </div>
 
-                <div class="mt-4 d-flex justify-content-center">
-                    {{ $products->links('pagination::bootstrap-5') }}
+                <div class="mt-4 zara-pagination">
+                    <div class="meta">
+                        Showing {{ $products->firstItem() ?? 0 }} — {{ $products->lastItem() ?? 0 }} of {{ $products->total() }} products
+                    </div>
+
+                    <nav aria-label="Product pagination">
+                        <ul class="pagination">
+                            {{-- First --}}
+                            <li class="page-item {{ $products->onFirstPage() ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ $products->url(1) }}" aria-label="First">First</a>
+                            </li>
+
+                            {{-- Previous --}}
+                            <li class="page-item {{ $products->onFirstPage() ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ $products->previousPageUrl() }}" aria-label="Previous">Previous</a>
+                            </li>
+
+                            @php
+                                $start = max(1, $products->currentPage() - 2);
+                                $end = min($products->lastPage(), $products->currentPage() + 2);
+                            @endphp
+
+                            @if($start > 1)
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ $products->url(1) }}">1</a>
+                                </li>
+                                @if($start > 2)
+                                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                                @endif
+                            @endif
+
+                            @for($i = $start; $i <= $end; $i++)
+                                <li class="page-item {{ $products->currentPage() == $i ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $products->url($i) }}">{{ $i }}</a>
+                                </li>
+                            @endfor
+
+                            @if($end < $products->lastPage())
+                                @if($end < $products->lastPage() - 1)
+                                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                                @endif
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ $products->url($products->lastPage()) }}">{{ $products->lastPage() }}</a>
+                                </li>
+                            @endif
+
+                            {{-- Next --}}
+                            <li class="page-item {{ $products->currentPage() == $products->lastPage() ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ $products->nextPageUrl() }}" aria-label="Next">Next</a>
+                            </li>
+
+                            {{-- Last --}}
+                            <li class="page-item {{ $products->currentPage() == $products->lastPage() ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ $products->url($products->lastPage()) }}" aria-label="Last">Last</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </main>
         </div>

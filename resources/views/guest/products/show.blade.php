@@ -1,7 +1,7 @@
 @extends('layouts.guest')
 
 @section('content')
-    <div class="container py-5">
+    <div class="container py-5 product-page">
         <div class="row gx-4 gy-4">
             <div class="col-12 col-lg-8">
                 @php
@@ -14,62 +14,56 @@
                 @endphp
 
                 @if ($primaryUrl)
-                    <div style="position:relative;">
-                        @if ($hasDiscount)
-                            <span style="position:absolute; left:12px; top:12px; background:#dc3545; color:#fff; padding:6px 8px; font-weight:700; border-radius:4px; z-index:5; font-size:.9rem;">
-                                {{ rtrim(rtrim(number_format($discountPercent, 2, '.', ''), '0'), '.') }}% OFF
-                            </span>
-                        @endif
-                        <img id="product-primary-image" src="{{ $primaryUrl }}" alt="{{ $primary->alt ?? $product->title }}"
-                            class="img-fluid w-100 mb-3" style="height:560px; object-fit:cover; display:block;">
+                    <div class="gallery">
+                        <div class="primary">
+                            @if ($hasDiscount)
+                                <span class="discount-badge">{{ rtrim(rtrim(number_format($discountPercent, 2, '.', ''), '0'), '.') }}% OFF</span>
+                            @endif
+                            <img id="product-primary-image" src="{{ $primaryUrl }}" alt="{{ $primary->alt ?? $product->title }}" loading="lazy">
+                        </div>
                     </div>
                 @else
-                    <div class="bg-light d-flex align-items-center justify-content-center mb-3" style="height:560px; position:relative;">
-                        @if ($hasDiscount)
-                            <span style="position:absolute; left:12px; top:12px; background:#dc3545; color:#fff; padding:6px 8px; font-weight:700; border-radius:4px; z-index:5; font-size:.9rem;">
-                                {{ rtrim(rtrim(number_format($discountPercent, 2, '.', ''), '0'), '.') }}% OFF
-                            </span>
-                        @endif
-                        <small class="text-muted">No image</small>
+                    <div class="gallery">
+                        <div class="primary d-flex align-items-center justify-content-center" style="background:#f5f5f5;">
+                            @if ($hasDiscount)
+                                <span class="discount-badge">{{ rtrim(rtrim(number_format($discountPercent, 2, '.', ''), '0'), '.') }}% OFF</span>
+                            @endif
+                            <small class="text-muted">No image</small>
+                        </div>
                     </div>
                 @endif
 
                 @if ($product->images->count() > 1)
-                    <div class="d-flex flex-row flex-wrap gap-2">
+                    <div class="thumbs mt-3">
                         @foreach ($product->images as $img)
                             @php $thumbUrl = '/storage/' . $img->path; @endphp
-                            <img src="{{ $thumbUrl }}" alt="{{ $img->alt ?? $product->title }}" class="img-fluid"
-                                style="width:96px; height:96px; object-fit:cover; cursor:pointer; display:block;"
-                                data-path="{{ $thumbUrl }}" role="button" aria-label="View image">
+                            <img src="{{ $thumbUrl }}" alt="{{ $img->alt ?? $product->title }}" class="thumb-img"
+                                 data-path="{{ $thumbUrl }}" role="button" aria-label="View image">
                         @endforeach
                     </div>
                 @endif
             </div>
 
-            <aside class="col-12 col-lg-4">
-                <h1 class="h4 text-uppercase mb-2" style="letter-spacing:0.04em;">{{ $product->title }}</h1>
+            <aside class="col-12 col-lg-4 meta">
+                <h1 class="text-uppercase">{{ $product->title }}</h1>
 
                 @if ($product->sku)
-                    <div class="text-muted small mb-3">{{ $product->sku }}</div>
+                    <div class="sku small mb-3">{{ $product->sku }}</div>
                 @endif
 
-                <div class="mb-3">
-                    <div class="h3 fw-bold mb-0">
+                <div class="mb-3 price-wrap">
+                    <div id="product-price" class="price" data-base-price="{{ number_format($basePrice, 2, '.', '') }}" data-discount-percent="{{ number_format($discountPercent, 2, '.', '') }}">
                         @if ($hasDiscount)
-                            <span id="product-price" data-base-price="{{ number_format($basePrice, 2, '.', '') }}" data-discount-percent="{{ number_format($discountPercent, 2, '.', '') }}">
-                                <del class="text-muted" style="margin-right:.5rem;">{{ number_format($basePrice, 2) }} €</del>
-                                <span class="fw-bold">{{ $discountedPrice }} €</span>
-                            </span>
+                            <del class="text-muted">{{ number_format($basePrice, 2) }} €</del>
+                            <span class="fw-bold">{{ $discountedPrice }} €</span>
                         @else
-                            <span id="product-price" data-base-price="{{ number_format($basePrice, 2, '.', '') }}" data-discount-percent="0">
-                                {{ number_format($basePrice, 2) }} €
-                            </span>
+                            {{ number_format($basePrice, 2) }} €
                         @endif
                     </div>
                 </div>
 
                 @if (!empty($product->description))
-                    <div class="mb-3 text-muted">{!! nl2br(e($product->description)) !!}</div>
+                    <div class="desc">{!! nl2br(e($product->description)) !!}</div>
                 @endif
 
                 @if ($product->categories->count())
@@ -77,7 +71,7 @@
                         <strong class="small text-uppercase">Categories</strong>
                         <div class="mt-2 d-flex flex-wrap gap-2">
                             @foreach ($product->categories as $cat)
-                                <span class="small text-muted px-2 py-1" style="background:transparent;">{{ $cat->name }}</span>
+                                <span class="small text-muted px-2 py-1">{{ $cat->name }}</span>
                             @endforeach
                         </div>
                     </div>
@@ -95,8 +89,7 @@
                                     <option value="">{{ __('Choose an option') }}</option>
                                     @foreach ($product->variants as $variant)
                                         <option value="{{ $variant->id }}" data-price="{{ number_format($variant->price ?? $product->price, 2, '.', '') }}">
-                                            {{ $variant->name ?? $variant->sku }} —
-                                            {{ number_format($variant->price ?? $product->price, 2) }} €
+                                            {{ $variant->name ?? $variant->sku }} — {{ number_format($variant->price ?? $product->price, 2) }} €
                                         </option>
                                     @endforeach
                                 </select>
@@ -110,8 +103,8 @@
                             </div>
 
                             <div class="flex-fill d-flex gap-2">
-                                <button type="submit" class="btn btn-dark btn-sm flex-grow-1 align-self-end">Add to cart</button>
-                                <a href="{{ route('cart.index') }}" class="btn btn-outline-dark btn-sm align-self-end">View cart</a>
+                                <button type="submit" class="btn-zara">Add to cart</button>
+                                <a href="{{ route('cart.index') }}" class="btn-zara-outline">View cart</a>
                             </div>
                         </div>
                     </form>
@@ -119,8 +112,8 @@
 
                 @auth
                     @if (auth()->user()->isAdmin())
-                        <div class="d-flex gap-2">
-                            <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                        <div class="d-flex gap-2 admin-actions">
+                            <a href="{{ route('admin.products.edit', $product) }}" class="btn-zara-outline">Edit</a>
 
                             <form action="{{ route('admin.products.destroy', $product) }}" method="POST" onsubmit="return confirm('Delete product?');">
                                 @csrf @method('DELETE')

@@ -55,8 +55,8 @@
         }
     </style>
 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
+    
+        @vite(['resources/css/admin.css'])
     @stack('head')
 </head>
 

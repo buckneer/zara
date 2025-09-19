@@ -161,32 +161,8 @@ body {
     background: #fff;
 }
 
-/* HERO */
-.hero {
-    min-height: 78vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    background-image: url("https://picsum.photos/1600/900?random=101");
-    background-size: cover;
-    background-position: center;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-}
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        180deg,
-        rgba(0, 0, 0, 0.35) 0%,
-        rgba(0, 0, 0, 0.55) 100%
-    );
-    z-index: 0;
-}
-.hero .container {
-    position: relative;
-    z-index: 2;
-}
+
+
 
 .brand {
     font-family: "Playfair Display", serif;
@@ -695,3 +671,699 @@ body {
   clip: rect(1px, 1px, 1px, 1px);
   white-space: nowrap;
 }
+
+
+/* Zara-like black & white pagination */
+.zara-pagination { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  color: #111;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.zara-pagination .meta {
+  color: #777;           /* subtle grey */
+  font-size: .9rem;
+  letter-spacing: .02em;
+}
+
+/* Remove Bootstrap button look */
+.zara-pagination .pagination {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  gap: 0.25rem;
+  --bs-pagination-border-width: 0;
+}
+
+/* page links — simple text links, uppercase small */
+.zara-pagination .page-link {
+  color: #111;
+  background: transparent;
+  border: 0;
+  padding: .35rem .6rem;
+  min-width: 36px;
+  text-align: center;
+  text-transform: none;
+  font-size: .95rem;
+  line-height: 1;
+  border-radius: 0;
+  transition: transform .12s ease, color .12s ease;
+}
+
+/* subtle hover 'lift' */
+.zara-pagination .page-link:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  color: #000;
+}
+
+/* active page: bold + underline instead of filled background */
+.zara-pagination .page-item.active .page-link {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  color: #000;
+  box-shadow: none;
+}
+
+/* make previous/next/first/last look lighter and small-caps */
+.zara-pagination .page-item a[aria-label] {
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #222;
+  opacity: .85;
+}
+
+/* disabled links muted */
+.zara-pagination .page-item.disabled .page-link,
+.zara-pagination .page-item.disabled a[aria-label] {
+  color: #bdbdbd;
+  pointer-events: none;
+  transform: none;
+  opacity: 1;
+}
+
+/* tight numeric window spacing for large screens */
+@media (min-width: 768px) {
+  .zara-pagination .pagination { gap: .25rem; }
+}
+
+
+/* Zara-like product card — monochrome, minimal */
+.zara-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #111;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* card container for spacing / hover */
+.zara-card .card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  transition: transform .12s ease, box-shadow .12s ease;
+  will-change: transform;
+}
+
+/* image area: tall, full-bleed feel */
+.zara-card .image-wrap {
+  width: 100%;
+  aspect-ratio: 3 / 4; /* nice vertical format */
+  overflow: hidden;
+  display: block;
+  background: #fff;
+  position: relative;
+}
+
+/* the image should fill and center — crop is OK */
+.zara-card .image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform .4s ease;
+}
+
+/* subtle lift on hover (desktop) */
+.zara-card:hover .card-inner { transform: translateY(-4px); }
+.zara-card:hover .image-wrap img { transform: scale(1.03); }
+
+/* small monochrome discount badge */
+.zara-card .discount-badge {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  background: #111;
+  color: #fff;
+  font-weight: 600;
+  padding: 6px 8px;
+  font-size: .75rem;
+  border-radius: 2px;
+  z-index: 10;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* title style: minimal, uppercase, light weight */
+.zara-card .product-title {
+  font-size: .88rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #111;
+  margin: 0;
+}
+
+/* price row: big bold price, small muted original */
+.zara-card .price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+}
+
+.zara-card .price {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #111;
+  letter-spacing: .02em;
+}
+
+.zara-card .original-price {
+  font-size: .85rem;
+  color: #777;
+  text-decoration: line-through;
+  margin-right: .6rem;
+}
+
+/* minimal add button — small outlined pill */
+.zara-card .btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .28rem .6rem;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  font-size: .78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  transition: background-color .12s ease, color .12s ease, transform .12s ease;
+}
+
+/* inverted on hover */
+.zara-card .btn-add:hover {
+  background: #111;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* mobile tweaks: reduce image height */
+@media (max-width: 575px) {
+  .zara-card .image-wrap { aspect-ratio: 2/3; }
+  .zara-card .price { font-size: 1rem; }
+}
+
+
+/* Zara-like product detail styles — monochrome minimal */
+.product-page {
+  color: #111;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Layout */
+.product-page .gallery {
+  display: block;
+}
+.product-page .gallery .primary {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  aspect-ratio: 3/4;
+  height: 560px; /* fallback, will scale on smaller screens */
+  display: block;
+}
+.product-page .gallery .primary img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform .4s ease;
+}
+.product-page .gallery .thumbs {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: .75rem;
+  flex-wrap: wrap;
+}
+.product-page .gallery .thumbs img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  cursor: pointer;
+  display: block;
+  border: 1px solid transparent;
+  transition: transform .15s ease, border-color .12s ease, filter .12s ease;
+  filter: grayscale(.2);
+}
+.product-page .gallery .thumbs img:hover {
+  transform: translateY(-4px);
+  border-color: #111;
+  filter: grayscale(0);
+}
+
+/* Discount badge: small black pill */
+.product-page .discount-badge {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  background: #111;
+  color: #fff;
+  font-weight: 600;
+  padding: 6px 8px;
+  font-size: .78rem;
+  border-radius: 2px;
+  z-index: 5;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* Right column */
+.product-page .meta h1 {
+  font-size: 1.25rem;
+  margin: 0 0 .4rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 400;
+}
+.product-page .meta .sku {
+  color: #737373;
+  font-size: .85rem;
+  margin-bottom: .6rem;
+}
+
+/* Price block */
+.product-page .meta .price-wrap {
+  margin-bottom: 1rem;
+}
+.product-page .meta .price {
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: .02em;
+}
+.product-page .meta .price del {
+  color: #8b8b8b;
+  margin-right: .6rem;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+/* Description & categories */
+.product-page .meta .desc {
+  color: #6f6f6f;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Options */
+.product-page .meta .form-select-sm {
+  border-radius: 0;
+  padding: .35rem .6rem;
+}
+
+/* Add button — pill minimal */
+.btn-zara {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  padding: .4rem .9rem;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  font-weight: 600;
+  font-size: .9rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+}
+.btn-zara:hover {
+  background: #111;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Outline button for view cart / edit */
+.btn-zara-outline {
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  padding: .35rem .75rem;
+  border-radius: 4px;
+  font-size: .85rem;
+  text-transform: none;
+}
+
+/* Admin controls smaller */
+.product-page .admin-actions .btn-danger {
+  border-radius: 4px;
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+  .product-page .gallery .primary { height: 520px; aspect-ratio: 3/4; }
+}
+@media (max-width: 576px) {
+  .product-page .gallery .primary { height: 420px; aspect-ratio: 2/3; }
+  .product-page .meta h1 { font-size: 1rem; }
+  .product-page .meta .price { font-size: 1.15rem; }
+  .product-page .gallery .thumbs img { width: 72px; height: 72px; }
+}
+
+/* Zara-like hero */
+.hero { margin-bottom: 2rem; position: relative; overflow: hidden; }
+
+.hero .carousel-inner { position: relative; }
+
+/* Make slides full-bleed and tall */
+.hero .carousel-item {
+  height: 70vh;
+  min-height: 420px;
+  display: block;
+}
+
+/* editorial monochrome crop */
+.hero .hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  filter: grayscale(.9) contrast(.98) brightness(.98);
+  transition: transform .6s ease;
+}
+
+/* subtle slow zoom on active slide */
+.hero .carousel-item.active .hero-img {
+  transform: scale(1.02);
+}
+
+/* caption: left aligned white card with lots of negative space */
+.hero .hero-caption {
+  position: absolute;
+  left: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 520px;
+  background: rgba(255,255,255,0.92);
+  padding: 28px 34px;
+  border-radius: 2px;
+  box-shadow: none;
+  color: #111;
+}
+
+/* typography */
+.hero .hero-title {
+  margin: 0 0 .35rem;
+  font-weight: 400;          /* light editorial feel */
+  font-size: clamp(1.6rem, 3.4vw, 2.8rem);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #111;
+}
+
+.hero .hero-sub {
+  margin: 0 0 1rem;
+  color: #6f6f6f;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* minimal pill buttons */
+.hero .btn-hero {
+  display: inline-block;
+  padding: .45rem .9rem;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  font-weight: 600;
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+}
+.hero .btn-hero:hover {
+  background: #111;
+  color: #fff;
+  transform: translateY(-2px);
+}
+.hero .btn-hero-outline {
+  background: transparent;
+}
+
+/* indicators — tiny horizontal bars */
+.hero .carousel-indicators {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: .5rem;
+  z-index: 5;
+}
+.hero .carousel-indicators button {
+  width: 28px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.18);
+  border: none;
+  padding: 0;
+}
+.hero .carousel-indicators button.active {
+  background: #111;
+}
+
+/* controls — simple SVG chevrons no heavy backgrounds */
+.carousel-control-prev,
+.carousel-control-next {
+  width: 56px;
+  height: 56px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: .95;
+  background: transparent;
+  border: none;
+}
+.carousel-control-prev svg,
+.carousel-control-next svg {
+  display: block;
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: #111;
+  stroke-width: 2.2;
+}
+
+/* hide default icon backgrounds */
+.carousel-control-prev-icon,
+.carousel-control-next-icon { background-image: none !important; }
+
+/* responsive tweaks: center caption on very small screens */
+@media (max-width: 768px) {
+  .hero .hero-caption {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 3rem);
+    max-width: none;
+    padding: 18px 20px;
+    top: 62%;
+  }
+  .hero .carousel-item { height: 56vh; min-height: 360px; }
+}
+
+
+/* ---------------------------
+   Zara-like landing styles
+   --------------------------- */
+
+:root{
+  --mono:#111;
+  --muted:#6f6f6f;
+  --muted-2:#9b9b9b;
+  --accent:#111;
+  --gap:1.125rem;
+  --container-width:1200px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* General layout */
+.landing { color: var(--mono); background:#fff; }
+.container { max-width: var(--container-width); margin: 0 auto; padding: 0 1rem; }
+
+/* ---------------------------
+   HERO (editorial)
+   --------------------------- */
+.hero { position: relative; overflow: hidden; margin-bottom: 2.25rem; }
+.hero .carousel-item { height: 70vh; min-height: 420px; display:block; }
+.hero-img {
+  width:100%; height:100%; object-fit:cover; object-position:center;
+  filter: grayscale(.9) contrast(.98) brightness(.98);
+  transition: transform .6s ease;
+}
+.hero .carousel-item.active .hero-img { transform: scale(1.02); }
+
+.hero-caption {
+  position:absolute; left:6%; top:50%; transform:translateY(-50%);
+  max-width:560px; background: rgba(255,255,255,0.94);
+  padding:28px 34px; border-radius:2px; color:var(--mono);
+}
+.hero-title {
+  margin:0 0 .35rem; font-weight:400; text-transform:uppercase;
+  letter-spacing:.06em; font-size:clamp(1.6rem,3.6vw,2.8rem);
+}
+.hero-sub { margin:0 0 1rem; color:var(--muted); font-size:1rem; line-height:1.4; }
+
+.btn-hero {
+  display:inline-block; padding:.45rem .9rem; border-radius:999px; border:1px solid var(--mono);
+  background:transparent; color:var(--mono); font-weight:600; font-size:.85rem; text-transform:uppercase;
+}
+.btn-hero:hover { background:var(--mono); color:#fff; transform:translateY(-2px); }
+
+/* indicators */
+.hero .carousel-indicators { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); display:flex; gap:.5rem; z-index:5; }
+.hero .carousel-indicators button { width:28px; height:3px; border-radius:999px; background:rgba(0,0,0,.15); border:none; }
+.hero .carousel-indicators button.active { background:var(--mono); }
+
+/* controls (thin chevrons) */
+.carousel-control-prev, .carousel-control-next {
+  width:56px; height:56px; top:50%; transform:translateY(-50%); background:transparent; border:none;
+}
+.carousel-control-prev svg, .carousel-control-next svg { width:26px; height:26px; stroke:var(--mono); stroke-width:2.2; fill:none; }
+
+/* ---------------------------
+   FEATURED / EDITORIAL BLOCK
+   --------------------------- */
+.featured h2 { font-family: 'Playfair Display', serif; font-weight:400; margin-bottom:.5rem; font-size:1.55rem; }
+.featured .muted-small { color:var(--muted); font-size:.98rem; margin-bottom:1rem; }
+.featured img { width:100%; height:auto; object-fit:cover; }
+
+/* ---------------------------
+   PRODUCT GRID (ZARA-like cards)
+   --------------------------- */
+.product-grid { padding-top: .25rem; padding-bottom: 2.5rem; }
+.zara-card { background:transparent; border:none; padding:0; color:var(--mono); }
+.zara-card .image-wrap { overflow:hidden; display:block; }
+.zara-card .portrait-img {
+  width:100%; height:420px; object-fit:contain; object-position:center; background:#fff; display:block;
+}
+@media (max-width:576px) { .zara-card .portrait-img { height:360px; } }
+
+/* card meta */
+.zara-card .meta { padding-top:.9rem; }
+.zara-card h3 { margin:0 0 .35rem; text-transform:uppercase; letter-spacing:.04em; font-size:.88rem; font-weight:400; }
+.zara-card .sku { color:var(--muted-2); font-size:.85rem; margin-bottom:.4rem; }
+
+/* price / actions */
+.zara-card .price-row { display:flex; justify-content:space-between; align-items:center; gap:.5rem; margin-top:.45rem; }
+.zara-card .price { font-weight:700; font-size:1.02rem; }
+.zara-card .original-price { text-decoration:line-through; color:var(--muted-2); margin-right:.5rem; font-size:.9rem; }
+
+/* minimal pill button */
+.zara-card .btn-add {
+  display:inline-flex; align-items:center; padding:.32rem .65rem; border-radius:999px; border:1px solid var(--mono);
+  background:transparent; color:var(--mono); font-weight:600; font-size:.78rem; text-transform:uppercase;
+}
+.zara-card .btn-add:hover { background:var(--mono); color:#fff; transform:translateY(-1px); }
+
+/* badges */
+.discount-badge { position:absolute; left:10px; top:10px; background:var(--mono); color:#fff; font-weight:600; padding:6px 8px; font-size:.75rem; border-radius:2px; z-index:9; text-transform:uppercase; letter-spacing:.04em; }
+.product-badge { position:absolute; right:10px; top:10px; background:#111; color:#fff; padding:6px 8px; font-size:.75rem; border-radius:2px; text-transform:uppercase; }
+
+/* ---------------------------
+   ABOUT / NEWSLETTER
+   --------------------------- */
+.about { padding:3rem 0; }
+.about h3 { margin-bottom:.6rem; }
+.newsletter { padding:2.25rem 0; }
+/* inputs minimal */
+.input-plain { border:1px solid #e6e6e6; padding:.6rem .75rem; border-radius:2px; background:transparent; }
+
+/* footer tiny */
+.landing .muted-small { color:var(--muted); }
+
+/* responsive tweaks */
+@media (max-width:992px) {
+  .hero-caption { left:50%; transform:translate(-50%,-50%); width:calc(100% - 3rem); max-width:none; top:60%; padding:18px 20px; }
+  .hero .carousel-item { height:56vh; min-height:360px; }
+}
+
+/* === Cart component styles (prefix: cart-*) === */
+
+/* Card + table baseline */
+.cart-card { background: transparent; }
+.cart-summary-card { background: #fff; border-radius: 8px; box-shadow: 0 6px 18px rgba(12,12,12,0.06); }
+.cart-card .card-body,
+.cart-summary-card .card-body { padding: 18px; }
+
+/* Title */
+.cart-title { letter-spacing: .04em; }
+
+/* Table */
+.cart-table { width: 100%; border-collapse: collapse; }
+.cart-thead th { border-bottom: 1px solid #e9e9e9; text-transform: uppercase; font-size: 0.75rem; color: #6b6b6b; font-weight: 600; padding: 14px 12px; vertical-align: middle; }
+.cart-th { padding: 12px; }
+.cart-th-narrow { width: 120px; text-align: left; }
+.cart-th-center { text-align: right; }
+
+/* Rows / cells */
+.cart-row { border-bottom: 1px solid #f1f1f1; }
+.cart-td { padding: 14px 12px; vertical-align: middle; }
+.cart-td-narrow { width: 160px; }
+
+/* Product column */
+.cart-thumb-link { display: block; }
+.cart-thumb { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; display: block; }
+.cart-noimage { width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: #f8f8f8; color: #6c757d; border-radius: 6px; font-size: 12px; }
+.cart-product-info { min-width: 0; } /* allow ellipsis */
+.cart-product-title { font-size: 1rem; }
+
+/* Variant / SKU */
+.cart-variant, .cart-sku { color: #8a8a8a; font-size: 0.85rem; }
+
+/* Qty form */
+.cart-qty-form { gap: .5rem; }
+.cart-qty-input { width: 90px; }
+
+/* Buttons */
+.cart-btn-update, .cart-btn-remove { white-space: nowrap; }
+.cart-btn-update { padding: .35rem .6rem; }
+.cart-btn-remove { padding: .35rem .6rem; }
+
+/* Prices */
+.cart-unit-price { color: #333; font-weight: 600; }
+.cart-line-total { text-align: right; color: #111; font-size: 1rem; }
+
+/* Actions cell */
+.cart-td-actions { text-align: right; }
+
+/* Summary (aside) */
+.cart-subtotal-block { padding-bottom: 8px; border-bottom: 1px dashed #eee; margin-bottom: 14px; }
+.cart-subtotal-value { margin-top: 6px; }
+
+/* CTA buttons in summary */
+.cart-checkout-btn { padding: 12px 14px; border-radius: 6px; }
+.cart-continue-btn { padding: 10px 14px; border-radius: 6px; }
+
+/* Small note text */
+.cart-note { color: #8a8a8a; }
+
+/* Sticky aside on large screens */
+@media (min-width: 992px) {
+    aside.cart-summary-card { position: sticky; top: 20px; }
+}
+
+/* Responsive behaviour: stack table rows on small screens */
+@media (max-width: 767.98px) {
+    .cart-table thead { display: none; }
+    .cart-row { display: block; margin-bottom: 14px; border: 1px solid #f1f1f1; border-radius: 8px; padding: 12px; }
+    .cart-td { display: block; padding: 6px 0; }
+    .cart-td.cart-td-actions { text-align: left; margin-top: 8px; }
+    .cart-td.cart-td-center { text-align: left; }
+    .cart-qty-input { width: 100%; }
+}
+
+/* Utility tweaks */
+.cart-product-title { color: #111; }

@@ -1,0 +1,319 @@
+/* admin.css
+   Scoped admin table styles. Put this file at: resources/css/admin.css
+
+   - Scope: all styles are under .admin-ui to avoid leaking to the public site.
+   - Compatibility: includes selectors for common table classes and your existing
+     .zara-* classes to let you keep current Blade templates.
+   - Usage: include with Vite/Mix in layouts.admin and add class "admin-ui" to body
+*/
+
+/* -------------------------
+   Variables
+   ------------------------- */
+:root {
+  --admin-bg: #f6f7fb;
+  --admin-card-bg: #ffffff;
+  --admin-border: #e9e9ea;
+  --admin-hr: #f1f1f3;
+  --admin-muted: #6b6b6b;
+  --admin-muted-2: #8a8a8a;
+  --admin-accent: #0f1724; /* near-black */
+  --admin-primary: #111827;
+  --admin-primary-2: #1f2937;
+  --admin-success: #198754;
+  --admin-danger: #c92a2a;
+  --admin-action-bg: #f8fafc;
+  --admin-radius: 8px;
+  --admin-shadow: 0 6px 18px rgba(12,12,12,0.06);
+  --admin-gap: 12px;
+  --admin-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* -------------------------
+   Scope root: admin-ui
+   ------------------------- */
+.admin-ui {
+  background: var(--admin-bg);
+  color: var(--admin-accent);
+  font-family: var(--admin-font-sans);
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Make sure admin card containers look elevated */
+.admin-ui .admin-card,
+.admin-ui .card.admin-card {
+  background: var(--admin-card-bg);
+  border-radius: var(--admin-radius);
+  border: 1px solid var(--admin-border);
+  box-shadow: var(--admin-shadow);
+}
+
+/* Generic container / page title */
+.admin-ui .admin-page-title {
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1rem;
+  margin-bottom: 18px;
+}
+
+/* -------------------------
+   Table base styles
+   ------------------------- */
+/* Target common table wrappers */
+.admin-ui .table,
+.admin-ui table {
+  border-collapse: collapse;
+  width: 100%;
+  background: transparent;
+  margin-bottom: 0;
+}
+
+/* Core table head cells */
+.admin-ui table thead th,
+.admin-ui .admin-thead th,
+.admin-ui .admin-th {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--admin-muted);
+  font-weight: 700;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--admin-border);
+  vertical-align: middle;
+  letter-spacing: 0.02em;
+}
+
+/* Table body cells */
+.admin-ui table tbody td,
+.admin-ui .admin-td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--admin-hr);
+  color: var(--admin-primary);
+  font-size: 0.95rem;
+}
+
+/* Narrow / center / action helpers */
+.admin-ui .admin-th-narrow,
+.admin-ui .admin-td-narrow,
+.admin-ui .zara-th-narrow,
+.admin-ui .zara-td-narrow {
+  width: 96px;
+  white-space: nowrap;
+}
+
+.admin-ui .admin-th-center,
+.admin-ui .admin-td-center,
+.admin-ui .zara-th-center,
+.admin-ui .zara-td-center {
+  text-align: right;
+}
+
+/* Actions column */
+.admin-ui .admin-td-actions,
+.admin-ui .admin-th-actions,
+.admin-ui .zara-th-actions,
+.admin-ui .zara-td-actions {
+  width: 160px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Row hover subtle highlight */
+.admin-ui table tbody tr:hover {
+  background: rgba(17, 24, 39, 0.02);
+}
+
+/* Alternating row (for striped tables) */
+.admin-ui .table-striped tbody tr:nth-of-type(odd) {
+  background: rgba(17, 24, 39, 0.02);
+}
+
+/* Make small text muted consistently */
+.admin-ui .small,
+.admin-ui .text-muted {
+  color: var(--admin-muted-2);
+  font-size: 0.85rem;
+}
+
+/* -------------------------
+   Thumbnails, images, names
+   ------------------------- */
+.admin-ui .admin-thumb,
+.admin-ui img.admin-thumb,
+.admin-ui .zara-thumb {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: inline-block;
+  vertical-align: middle;
+  border: 1px solid #f0f0f0;
+}
+
+/* fallback no-image box */
+.admin-ui .admin-noimage,
+.admin-ui .zara-noimage {
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  background: #fbfbfd;
+  border: 1px dashed #eee;
+  color: var(--admin-muted-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+/* Product title in tables */
+.admin-ui .admin-item-title,
+.admin-ui .zara-item-title {
+  font-weight: 600;
+  color: var(--admin-primary);
+  display: block;
+}
+
+/* -------------------------
+   Badges & status
+   ------------------------- */
+.admin-ui .admin-badge,
+.admin-ui .badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: none;
+}
+
+/* Active / Inactive */
+.admin-ui .admin-badge-active,
+.admin-ui .zara-badge-active {
+  background: rgba(25, 135, 84, 0.12);
+  color: var(--admin-success);
+  border: 1px solid rgba(25,135,84,0.12);
+}
+
+.admin-ui .admin-badge-inactive,
+.admin-ui .zara-badge-inactive {
+  background: rgba(108, 117, 125, 0.08);
+  color: var(--admin-muted-2);
+  border: 1px solid rgba(108,117,125,0.06);
+}
+
+/* Generic status colors */
+.admin-ui .admin-badge-status { padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: 0.8rem; }
+.admin-ui .zara-badge-status { padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: 0.8rem; }
+
+.admin-ui .zara-status-pending,
+.admin-ui .admin-status-pending { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+.admin-ui .zara-status-processing,
+.admin-ui .admin-status-processing { background: rgba(96,165,250,0.08); color: #0ea5e9; }
+.admin-ui .zara-status-shipped,
+.admin-ui .admin-status-shipped { background: rgba(59,130,246,0.08); color: #2563eb; }
+.admin-ui .zara-status-completed,
+.admin-ui .admin-status-completed { background: rgba(16,185,129,0.08); color: var(--admin-success); }
+.admin-ui .zara-status-cancelled,
+.admin-ui .admin-status-cancelled { background: rgba(239,68,68,0.08); color: var(--admin-danger); }
+.admin-ui .zara-status-refunded,
+.admin-ui .admin-status-refunded { background: rgba(147, 197, 253, 0.06); color: #2563eb; }
+
+/* -------------------------
+   Action buttons inside tables
+   ------------------------- */
+.admin-ui .admin-actions,
+.admin-ui .zara-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.admin-ui .admin-action,
+.admin-ui .zara-action {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+}
+
+/* Buttons: keep bootstrap buttons but add small admin overrides */
+.admin-ui .btn {
+  font-size: 0.9rem;
+}
+
+/* Danger small button */
+.admin-ui .btn-danger, .admin-ui .btn-outline-danger {
+  border-radius: 6px;
+}
+
+/* -------------------------
+   Table footers / pagination / card footer
+   ------------------------- */
+.admin-ui .admin-card-footer,
+.admin-ui .card-footer {
+  background: transparent;
+  border-top: 1px solid var(--admin-hr);
+  padding: 12px 16px;
+}
+
+/* Pagination alignment */
+.admin-ui .admin-pagination {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+/* -------------------------
+   Responsive behavior
+   ------------------------- */
+/* Small screens: hide thead and stack rows */
+@media (max-width: 767.98px) {
+  .admin-ui .table thead { display: none; }
+  .admin-ui table tbody tr { display: block; margin-bottom: 14px; border: 1px solid var(--admin-hr); border-radius: 8px; padding: 12px; background: var(--admin-card-bg); }
+  .admin-ui table tbody td { display: block; padding: 6px 0; border: none; }
+  .admin-ui .admin-td-actions { text-align: left; margin-top: 10px; }
+  .admin-ui .admin-thumb, .admin-ui .zara-thumb { width: 64px; height: 64px; }
+}
+
+/* -------------------------
+   Forms inside tables (selects, qty inputs)
+   ------------------------- */
+.admin-ui .table .form-select-sm,
+.admin-ui .table .form-control-sm {
+  font-size: 0.9rem;
+  padding: 6px 8px;
+}
+
+/* -------------------------
+   Utilities for migrating .zara-* classes
+   ------------------------- */
+/* We include the .zara-* selectors so you can keep current templates */
+.admin-ui .zara-table { width: 100%; border-collapse: collapse; }
+.admin-ui .zara-thead th { text-transform: uppercase; font-size: .75rem; color: var(--admin-muted); font-weight: 700; padding: 12px 14px; border-bottom: 1px solid var(--admin-border); }
+.admin-ui .zara-td { padding: 12px 14px; border-bottom: 1px solid var(--admin-hr); vertical-align: middle; }
+.admin-ui .zara-row:hover { background: rgba(17,24,39,0.02); }
+.admin-ui .zara-thumb { width: 72px; height:72px; object-fit: cover; border-radius: 6px; }
+
+/* -------------------------
+   Tiny helpers for spacing / small screens
+   ------------------------- */
+.admin-ui .admin-flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Small note text style */
+.admin-ui .admin-note {
+  color: var(--admin-muted-2);
+  font-size: 0.9rem;
+}
+
+/* -------------------------
+   End of file
+   ------------------------- */

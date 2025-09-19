@@ -1,99 +1,116 @@
 @php
+    // Product image selection
     $primary = $product->images->where('is_primary', true)->first() ?? $product->images->first();
     $primaryUrl = $primary ? '/storage/' . $primary->path : 'https://picsum.photos/600/900?random=1';
-    $discountPercent = (float) ($product->discount_percent ?? 0);
+
+    // Raw discount value from model / DB
+    $discountRaw = (float) ($product->discount_percent ?? 0);
+
+    // Normalize: if value is a fraction (0 < x <= 1) treat as fraction (0.1 => 10%)
+    // otherwise treat as percent (10 => 10%). Then clamp to [0,100].
+    if ($discountRaw > 0 && $discountRaw <= 1) {
+        $discountPercent = $discountRaw * 100;
+    } else {
+        $discountPercent = $discountRaw;
+    }
+    $discountPercent = max(0, min(100, $discountPercent));
+
+    // Display-friendly integer for the badge
+    $displayDiscount = (int) round($discountPercent);
     $hasDiscount = $discountPercent > 0;
-    $basePrice = (float) ($product->price ?? 0);
-    $discountedPrice = $hasDiscount
-        ? number_format(max(0, $basePrice * (1 - $discountPercent / 100)), 2, '.', '')
-        : number_format($basePrice, 2, '.', '');
+
+    // Prices
+    $basePrice = (float) ($product->price ?? 0.0);
+    $basePriceFormatted = number_format($basePrice, 2, '.', '');
+
+    $discountedPriceFloat = $hasDiscount
+        ? max(0, $basePrice * (1 - $discountPercent / 100))
+        : $basePrice;
+
+    $discountedPriceFormatted = number_format($discountedPriceFloat, 2, '.', '');
+
     $currency = $product->currency ?? '€';
 @endphp
 
-<style>
-
-    .product-card { position: relative; }
-    .image-wrap {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 360px;              
-        overflow: hidden;           
-    }
-
-    .image-wrap img {
-        max-height: 100%;
-        width: auto;
-        height: auto;                
-        display: block;
-        object-fit: contain;        
-    }
-
-    /* badge + price visuals */
-    .discount-badge {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-        background: #dc3545;
-        color: #fff;
-        font-weight: 700;
-        padding: 6px 8px;
-        font-size: 0.85rem;
-        border-radius: 4px;
-        z-index: 9999;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-        line-height: 1;
-        text-transform: uppercase;
-    }
-    .price-row .original-price { text-decoration: line-through; opacity:.7; margin-right:.5rem; font-size:.95rem; }
-    .price-row .discounted-price { font-weight:700; font-size:1rem; }
-</style>
-
 <div class="col">
-    <div class="card h-100 border-0 product-card" data-discount-percent="{{ $discountPercent }}" data-base-price="{{ number_format($basePrice, 2, '.', '') }}">
-        <a href="{{ route('products.show', $product) }}" class="d-block image-wrap">
-            @if ($hasDiscount)
-                <span class="discount-badge">{{ rtrim(rtrim(number_format($discountPercent, 2, '.', ''), '0'), '.') }}% OFF</span>
-            @endif
+    <div class="zara-card card h-100" data-discount-percent="{{ $discountPercent }}">
+        <div class="card-inner">
+            <a href="{{ route('products.show', $product) }}" class="image-wrap d-block" aria-label="{{ $product->name ?? $product->title }}">
+                @if ($hasDiscount)
+                    <span class="discount-badge" aria-hidden="true">
+                        {{ $displayDiscount }}%
+                    </span>
+                @endif
 
-            <img
-                src="{{ $primaryUrl }}"
-                alt="{{ $product->name ?? $product->title }}"
-                class="img-fluid"
-                loading="lazy"
-            >
-        </a>
-
-        <div class="card-body px-0 pt-3">
-            <a href="{{ route('products.show', $product) }}" class="text-decoration-none text-dark">
-                <h2 class="h6 text-uppercase mb-1">{{ $product->name ?? $product->title }}</h2>
+                <img
+                    src="{{ $primaryUrl }}"
+                    alt="{{ $product->name ?? $product->title }}"
+                    loading="lazy"
+                >
             </a>
 
-            <div class="d-flex justify-content-between align-items-center price-row">
-                <div class="fw-bold">
-                    @if ($hasDiscount)
-                        <span class="small text-muted d-block">
-                            <span class="original-price" data-original="{{ number_format($basePrice, 2, '.', '') }}">
-                                {{ number_format($basePrice, 2) }} {{ $currency }}
-                            </span>
-                        </span>
-                        <span class="product-price discounted-price"
-                              data-base-price="{{ number_format($basePrice, 2, '.', '') }}"
-                              data-discount-percent="{{ $discountPercent }}">
-                            {{ $discountedPrice }} {{ $currency }}
-                        </span>
-                    @else
-                        <span class="product-price" data-base-price="{{ number_format($basePrice, 2, '.', '') }}" data-discount-percent="0">
-                            {{ number_format($basePrice, 2) }} {{ $currency }}
-                        </span>
-                    @endif
-                </div>
+            <div class="card-body px-0 pt-2">
+                <a href="{{ route('products.show', $product) }}" class="text-decoration-none text-reset">
+                    <h2 class="product-title mb-2">{{ $product->name ?? $product->title }}</h2>
+                </a>
 
-                <form action="{{ route('cart.add', $product) }}" method="POST" class="m-0">
-                    @csrf
-                    <button type="submit" class="btn btn-sm btn-outline-dark">Add</button>
-                </form>
+                <div class="price-row d-flex justify-content-between align-items-center">
+                    <div>
+                        @if ($hasDiscount)
+                            <div class="d-flex align-items-baseline gap-2">
+                                <span class="original-price" data-original="{{ $basePriceFormatted }}">
+                                    {{ $basePriceFormatted }} {{ $currency }}
+                                </span>
+
+                                <span class="price product-price"
+                                      data-base-price="{{ $basePriceFormatted }}"
+                                      data-discount-percent="{{ $discountPercent }}">
+                                    {{ $discountedPriceFormatted }} {{ $currency }}
+                                </span>
+                            </div>
+                        @else
+                            <span class="price product-price" data-base-price="{{ $basePriceFormatted }}">
+                                {{ $basePriceFormatted }} {{ $currency }}
+                            </span>
+                        @endif
+                    </div>
+
+                    <form action="{{ route('cart.add', $product) }}" method="POST" class="m-0">
+                        @csrf
+                        <button type="submit" class="btn-add" aria-label="Add {{ $product->name ?? $product->title }}">
+                            Add
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+{{-- Optional inline styles for the badge / original price. Move to your stylesheet as needed. --}}
+<style>
+    .discount-badge {
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        background: #e53935;
+        color: #fff;
+        padding: 6px 8px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        border-radius: 4px;
+        z-index: 10;
+        line-height: 1;
+    }
+    .original-price {
+        text-decoration: line-through;
+        opacity: 0.7;
+        font-size: 0.95rem;
+    }
+    .price.product-price {
+        font-weight: 700;
+        font-size: 1rem;
+        margin-left: 6px;
+    }
+    .image-wrap { position: relative; display: block; }
+</style>
