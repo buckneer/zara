@@ -18,9 +18,7 @@
             <div class="row g-4">
                 @foreach ($products as $product)
                     <div class="col-12 col-sm-6 col-md-4">
-                        {{-- make sure this path matches where your card partial lives:
-                        I provided a Bootstrap card at resources/views/products/_card.blade.php,
-                        so we include 'products._card' here. --}}
+                       
                         @include('guest.products._card', ['product' => $product])
                     </div>
                 @endforeach

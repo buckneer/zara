@@ -53,8 +53,7 @@ Route::middleware(['auth', 'is_admin'])
     });
 
 Route::get('/shop/{filter?}', [ShopController::class, 'index'])
-    ->name('shop.index')
-    ->where('filter', 'man|woman|exclusive');
+    ->name('shop.index');
 
 Route::middleware(['auth', 'is_admin'])
     ->prefix('admin')

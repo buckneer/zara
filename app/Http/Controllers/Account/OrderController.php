@@ -11,9 +11,7 @@ use App\Models\Cart;
 
 class OrderController extends Controller
 {
-    /**
-     * Show list of current user's orders.
-     */
+    
     public function index()
     {
         $user = Auth::user();
@@ -21,9 +19,6 @@ class OrderController extends Controller
         return view('account.orders.index', compact('orders'));
     }
 
-    /**
-     * Show a single order for the current user.
-     */
     public function show(Order $order)
     {
         $user = Auth::user();
@@ -36,10 +31,7 @@ class OrderController extends Controller
         return view('account.orders.show', compact('order'));
     }
 
-    /**
-     * Reorder: copy items from an order into the user's cart (merge quantities).
-     * POST /account/orders/{order}/reorder
-     */
+   
     public function reorder(Request $request, Order $order)
     {
         $user = Auth::user();

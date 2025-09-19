@@ -43,6 +43,7 @@ class ProductController extends Controller
             'position' => 'nullable|integer',
             'category_ids' => 'nullable|array',
             'category_ids.*' => 'exists:categories,id',
+            'discount_percent' => 'nullable|numeric|min:0|max:100',
 
             
             'images' => 'nullable|array',
@@ -58,6 +59,7 @@ class ProductController extends Controller
             'variants.*.stock' => 'nullable|integer',
             'variants.*.backorder' => 'nullable|boolean',
             'variants.*.attributes' => 'nullable|array',
+
         ]);
 
         DB::transaction(function () use ($data, $request, &$product) {

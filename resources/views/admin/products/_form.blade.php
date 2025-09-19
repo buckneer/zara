@@ -68,6 +68,41 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div class="col-md-12 mt-3">
+                        <label class="form-label text-uppercase small fw-bold">Discount</label>
+
+                        <div class="mb-2">
+                            <div class="btn-group" role="group" aria-label="preset discounts">
+                                <button type="button" class="btn btn-outline-secondary btn-discount-preset" data-value="10">10%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-discount-preset" data-value="20">20%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-discount-preset" data-value="50">50%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-discount-custom" data-value="">Custom</button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <input id="discount_percent" name="discount_percent" type="number" step="0.01" min="0" max="100"
+                                value="{{ old('discount_percent', isset($product) ? $product->discount_percent : 0) }}"
+                                class="form-control w-25 border-0 border-bottom rounded-0 @error('discount_percent') is-invalid @enderror"
+                                style="background:transparent;" placeholder="0.00">
+                            <div class="small text-muted ms-2">
+                                <span id="discount-preview">
+                                    @php
+                                        $initialPrice = old('price', isset($product->price) ? $product->price : 0);
+                                        $initialDiscount = old('discount_percent', isset($product->discount_percent) ? $product->discount_percent : 0);
+                                        $initialAfter = $initialPrice * (1 - ($initialDiscount / 100));
+                                    @endphp
+                                    After discount: <strong id="discounted-price">{{ number_format($initialAfter, 2, '.', '') }}</strong>
+                                </span>
+                            </div>
+                        </div>
+
+                        @error('discount_percent')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                 </div>
 
                 
@@ -270,6 +305,83 @@
                     });
                 });
             }
+            (function() {
+                const priceInput = document.getElementById('price');
+                const discountInput = document.getElementById('discount_percent');
+                const presetButtons = document.querySelectorAll('.btn-discount-preset');
+                const customButton = document.querySelector('.btn-discount-custom');
+                const discountedPriceEl = document.getElementById('discounted-price');
+
+                function parseNumber(v) {
+                    const n = parseFloat(String(v).replace(',', '.'));
+                    return isNaN(n) ? 0 : n;
+                }
+
+                function updatePreview() {
+                    const price = parseNumber(priceInput ? priceInput.value : 0);
+                    const percent = parseNumber(discountInput ? discountInput.value : 0);
+                    let after = price * (1 - (percent / 100));
+                    if (after < 0) after = 0;
+                    if (discountedPriceEl) discountedPriceEl.textContent = after.toFixed(2);
+                }
+
+                // preset buttons
+                presetButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // remove active on all
+                        presetButtons.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+
+                        const val = this.getAttribute('data-value');
+                        if (val === '') {
+                            // custom: focus input
+                            discountInput.focus();
+                            discountInput.value = '';
+                        } else {
+                            discountInput.value = val;
+                        }
+                        updatePreview();
+                    });
+                });
+
+                if (customButton) {
+                    customButton.addEventListener('click', function() {
+                        // toggle active
+                        presetButtons.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        discountInput.value = '';
+                        discountInput.focus();
+                    });
+                }
+
+                // update preview when price or discount changes
+                if (priceInput) {
+                    priceInput.addEventListener('input', updatePreview);
+                }
+                if (discountInput) {
+                    discountInput.addEventListener('input', function() {
+                        // keep value inside bounds
+                        let v = parseNumber(this.value);
+                        if (v < 0) v = 0;
+                        if (v > 100) v = 100;
+                        this.value = v;
+                        // unselect presets when value doesn't match
+                        presetButtons.forEach(b => {
+                            if (b.getAttribute('data-value') === String(v)) {
+                                b.classList.add('active');
+                            } else {
+                                b.classList.remove('active');
+                            }
+                        });
+                        updatePreview();
+                    });
+                }
+
+                // initial preview calculation
+                updatePreview();
+            })();
         });
+
+        
     </script>
 @endpush

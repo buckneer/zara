@@ -64,7 +64,9 @@ class AdminUsersController extends Controller
 
     public function show(User $user)
     {
-        $user->load(['orders' => function($q) { $q->latest()->limit(50); }, 'roles']);
+        $user->load(['orders' => function ($q) {
+            $q->latest()->limit(50);
+        }, 'roles']);
         $roles = Role::orderBy('name')->get();
 
         return view('admin.users.show', compact('user', 'roles'));
@@ -79,9 +81,43 @@ class AdminUsersController extends Controller
 
     public function update(Request $request, User $user)
     {
+        // If request is only changing roles (from the users index role dropdown)
+        if ($request->has('roles') && !$request->has('email') && !$request->has('name') && !$request->has('password')) {
+            $data = $request->validate([
+                'roles' => 'nullable|array',
+                'roles.*' => 'nullable|integer|exists:roles,id',
+            ]);
+
+            // Normalize: remove empty strings
+            $roles = array_filter($data['roles'] ?? [], function ($r) {
+                return $r !== '' && $r !== null;
+            });
+
+            // Prevent removing admin role if it would leave zero admins
+            $adminRole = Role::where('name', 'admin')->first();
+            if ($adminRole) {
+                $isRemovingAdminFromThisUser = $user->roles()->where('role_id', $adminRole->id)->exists()
+                    && !in_array($adminRole->id, $roles);
+
+                if ($isRemovingAdminFromThisUser) {
+                    $adminCount = $adminRole->users()->count();
+                    if ($adminCount <= 1) {
+                        return redirect()->back()->with('error', 'Cannot remove the admin role — there must be at least one admin.');
+                    }
+                }
+            }
+
+            DB::transaction(function () use ($user, $roles) {
+                $user->roles()->sync(array_values($roles));
+            });
+
+            return redirect()->route('admin.users.index')->with('success', 'Roles updated.');
+        }
+
+        // Full user update path (existing behaviour)
         $data = $request->validate([
             'name' => 'nullable|string|max:191',
-            'email' => ['required','email','max:191', Rule::unique('users','email')->ignore($user->id)],
+            'email' => ['required', 'email', 'max:191', Rule::unique('users', 'email')->ignore($user->id)],
             'password' => 'nullable|string|min:6|confirmed',
             'roles' => 'nullable|array',
             'roles.*' => 'integer|exists:roles,id',
@@ -97,7 +133,6 @@ class AdminUsersController extends Controller
 
             $user->save();
 
-            
             $user->roles()->sync($data['roles'] ?? []);
         });
 
@@ -111,7 +146,7 @@ class AdminUsersController extends Controller
             return redirect()->back()->with('error', 'You cannot delete your own account while logged in.');
         }
 
-        
+
         $adminRole = Role::where('name', 'admin')->first();
         if ($adminRole && $user->roles()->where('role_id', $adminRole->id)->exists()) {
             $adminCount = $adminRole->users()->count();
@@ -141,7 +176,7 @@ class AdminUsersController extends Controller
         $data = $request->validate(['user_id' => 'required|exists:users,id']);
         $user = User::findOrFail($data['user_id']);
 
-        
+
         if ($role->name === 'admin') {
             $adminCount = $role->users()->count();
             if ($adminCount <= 1 && $user->roles()->where('role_id', $role->id)->exists()) {

@@ -21,12 +21,15 @@ class Product extends Model
         'meta',
         'active',
         'position',
+        'discount_percent',
+
     ];
 
     protected $casts = [
         'meta' => 'array',
         'price' => 'decimal:2',
         'active' => 'boolean',
+        'discount_percent' => 'decimal:2',
     ];
 
 
@@ -57,5 +60,19 @@ class Product extends Model
     public function scopeActive($query)
     {
         return $query->where('active', true);
+    }
+
+
+    public function getDiscountedPriceAttribute()
+    {
+        $percent = (float) ($this->discount_percent ?? 0);
+        $price = (float) ($this->price ?? 0);
+
+        if ($percent <= 0) {
+            return number_format($price, 2, '.', '');
+        }
+
+        $discounted = ($price * (100 - $percent)) / 100;
+        return number_format($discounted >= 0 ? $discounted : 0, 2, '.', '');
     }
 }
