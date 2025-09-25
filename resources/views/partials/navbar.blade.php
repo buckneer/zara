@@ -20,10 +20,10 @@
                     <a class="nav-link" href="{{ route('shop.index') }}">New</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('shop.index', ['filter' => 'woman']) }}">Women</a>
+                    <a class="nav-link" href="{{ route('shop.index', ['filter' => 'women']) }}">Women</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('shop.index', ['filter' => 'man']) }}">Men</a>
+                    <a class="nav-link" href="{{ route('shop.index', ['filter' => 'men']) }}">Men</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('shop.index') }}">Editorial</a>
@@ -33,12 +33,7 @@
 
             <ul class="navbar-nav ms-auto align-items-center nav-icons">
 
-                <li class="nav-item me-2 d-none d-md-block">
-                    <form class="d-flex align-items-center" role="search" method="GET" action="#">
-                        <input name="q" class="form-control form-control-sm search-input" type="search"
-                            placeholder="Search" aria-label="Search">
-                    </form>
-                </li>
+                
 
 
                 <li class="nav-item me-2">

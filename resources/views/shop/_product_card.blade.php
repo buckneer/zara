@@ -75,13 +75,13 @@
                         @endif
                     </div>
 
-                    <form action="{{ route('cart.add', $product) }}" method="POST" class="m-0">
+                    <form action="{{ route('cart.add') }}" method="POST" class="d-flex gap-2 align-items-center">
                         @csrf
-                        <button type="submit" class="btn-add" aria-label="Add {{ $product->name ?? $product->title }}">
-                            Add
-                        </button>
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="number" name="qty" value="1" min="1" class="form-control form-control-sm" style="width:72px;">
+                        <button class="btn-add" type="submit">Add</button>
                     </form>
-                </div>
+                </div> 
             </div>
         </div>
     </div>

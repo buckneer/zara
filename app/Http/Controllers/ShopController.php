@@ -21,19 +21,14 @@ class ShopController extends Controller
         
         $filterNorm = $filter ? Str::slug($filter, '-') : null;
 
-       
-        $aliasMap = [
-            'men' => 'man',
-            'women' => 'woman',
-        ];
 
         $selectedCategory = null;
 
         if ($filterNorm) {
-            $canonical = $aliasMap[$filterNorm] ?? $filterNorm;
+            
 
             
-            $selectedCategory = Category::where('slug', $canonical)->first();
+            $selectedCategory = Category::where('slug', $filterNorm)->first();
 
             if ($selectedCategory) {
               
